@@ -1,0 +1,61 @@
+{% extends 'admin_dashboard/base.html' %}
+{% load static %}
+		{% block head %}
+		<!-- Specific Page Vendor CSS -->
+		<link rel="stylesheet" href="{% static 'vendor/jquery-ui/jquery-ui.css' %}" />
+		<link rel="stylesheet" href="{% static 'vendor/jquery-ui/jquery-ui.theme.css' %}" />
+		<link rel="stylesheet" href="{% static 'vendor/bootstrap-multiselect/css/bootstrap-multiselect.css' %}" />
+		<link rel="stylesheet" href="{% static 'vendor/morris/morris.css' %}" />
+		{% endblock head %}
+
+				{% block content %}
+				<section role="main" class="content-body">
+					<header class="page-header">
+						<h2>Dashboard</h2>
+					
+						<div class="right-wrapper text-right">
+							<ol class="breadcrumbs">
+								<li>
+									<a href="{% url 'admin-dashboard' %}">
+										<i class="fas fa-home"></i>
+									</a>
+								</li>
+								<li><span>Dashboard &nbsp;</span></li>
+								<li></li>
+							</ol>
+						</div>
+					</header>
+				</section>
+				{% endblock content %}
+
+		{% block scripts %}
+		<!-- Specific Page Vendor -->
+		<script src="{% static 'vendor/jquery-ui/jquery-ui.js' %}"></script>
+		<script src="{% static 'vendor/jqueryui-touch-punch/jquery.ui.touch-punch.js' %}"></script>
+		<script src="{% static 'vendor/jquery-appear/jquery.appear.js' %}"></script>
+		<script src="{% static 'vendor/bootstrap-multiselect/js/bootstrap-multiselect.js' %}"></script>
+		<script src="{% static 'vendor/jquery.easy-pie-chart/jquery.easypiechart.js' %}"></script>
+		<script src="{% static 'vendor/flot/jquery.flot.js' %}"></script>
+		<script src="{% static 'vendor/flot.tooltip/jquery.flot.tooltip.js' %}"></script>
+		<script src="{% static 'vendor/flot/jquery.flot.pie.js' %}"></script>
+		<script src="{% static 'vendor/flot/jquery.flot.categories.js' %}"></script>
+		<script src="{% static 'vendor/flot/jquery.flot.resize.js' %}"></script>
+		<script src="{% static 'vendor/jquery-sparkline/jquery.sparkline.js' %}"></script>
+		<script src="{% static 'vendor/raphael/raphael.js' %}"></script>
+		<script src="{% static 'vendor/morris/morris.js' %}"></script>
+		<script src="{% static 'vendor/gauge/gauge.js' %}"></script>
+		<script src="{% static 'vendor/snap.svg/snap.svg.js' %}"></script>
+		<script src="{% static 'vendor/liquid-meter/liquid.meter.js' %}"></script>
+		<script src="{% static 'vendor/jqvmap/jquery.vmap.js' %}"></script>
+		<script src="{% static 'vendor/jqvmap/data/jquery.vmap.sampledata.js' %}"></script>
+		<script src="{% static 'vendor/jqvmap/maps/jquery.vmap.world.js' %}"></script>
+		<script src="{% static 'vendor/jqvmap/maps/continents/jquery.vmap.africa.js' %}"></script>
+		<script src="{% static 'vendor/jqvmap/maps/continents/jquery.vmap.asia.js' %}"></script>
+		<script src="{% static 'vendor/jqvmap/maps/continents/jquery.vmap.australia.js' %}"></script>
+		<script src="{% static 'vendor/jqvmap/maps/continents/jquery.vmap.europe.js' %}"></script>
+		<script src="{% static 'vendor/jqvmap/maps/continents/jquery.vmap.north-america.js' %}"></script>
+		<script src="{% static 'vendor/jqvmap/maps/continents/jquery.vmap.south-america.js' %}"></script>
+		{% endblock scripts %}
+
+	</body>
+</html>
