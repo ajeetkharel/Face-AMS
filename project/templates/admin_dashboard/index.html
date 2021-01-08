@@ -25,6 +25,121 @@
 							</ol>
 						</div>
 					</header>
+					<div class="row">
+						<div class="col-lg-6">
+							<section class="card">
+								<header class="card-header">
+									<div class="card-actions">
+										<a href="#" class="card-action card-action-toggle" data-card-toggle></a>
+										<a href="#" class="card-action card-action-dismiss" data-card-dismiss></a>
+									</div>
+					
+									<h2 class="card-title">Line Chart</h2>
+									<p class="card-subtitle">A style of chart that is created by connecting a series of data points together with a line.</p>
+								</header>
+								<div class="card-body">
+					
+									<!-- Morris: Line -->
+									<div class="chart chart-md" id="morrisLine"></div>
+									<script type="text/javascript">
+					
+										var morrisLineData = [{
+											y: '2006',
+											a: 100,
+											b: 90
+										}, {
+											y: '2007',
+											a: 75,
+											b: 65
+										}, {
+											y: '2008',
+											a: 50,
+											b: 40
+										}, {
+											y: '2009',
+											a: 75,
+											b: 65
+										}, {
+											y: '2010',
+											a: 50,
+											b: 40
+										}, {
+											y: '2011',
+											a: 75,
+											b: 65
+										}, {
+											y: '2012',
+											a: 100,
+											b: 90
+										}, {
+											y: '2017',
+											a: 75,
+											b: 65
+										}, {
+											y: '2017',
+											a: 100,
+											b: 90
+										}];
+					
+										// See: js/examples/examples.charts.js for more settings.
+					
+									</script>
+					
+								</div>
+							</section>
+						</div>
+						<div class="col-lg-6">
+							<section class="card">
+								<header class="card-header">
+									<div class="card-actions">
+										<a href="#" class="card-action card-action-toggle" data-card-toggle></a>
+										<a href="#" class="card-action card-action-dismiss" data-card-dismiss></a>
+									</div>
+					
+									<h2 class="card-title">Pie Chart</h2>
+									<p class="card-subtitle">Default Pie Chart</p>
+								</header>
+								<div class="card-body">
+					
+									<!-- Flot: Pie -->
+									<div class="chart chart-md" id="flotPie"></div>
+									<script type="text/javascript">
+					
+										var flotPieData = [{
+											label: "Series 1",
+											data: [
+												[1, 60]
+											],
+											color: '#0088cc'
+										}, {
+											label: "Series 2",
+											data: [
+												[1, 10]
+											],
+											color: '#2baab1'
+										}, {
+											label: "Series 3",
+											data: [
+												[1, 15]
+											],
+											color: '#734ba9'
+										}, {
+											label: "Series 4",
+											data: [
+												[1, 15]
+											],
+											color: '#E36159'
+										}];
+					
+										// See: js/examples/examples.charts.js for more settings.
+					
+									</script>
+					
+								</div>
+							</section>
+						</div>
+					</div>
+					</div>
 				</section>
 				{% endblock content %}
 
@@ -55,7 +170,5 @@
 		<script src="{% static 'vendor/jqvmap/maps/continents/jquery.vmap.europe.js' %}"></script>
 		<script src="{% static 'vendor/jqvmap/maps/continents/jquery.vmap.north-america.js' %}"></script>
 		<script src="{% static 'vendor/jqvmap/maps/continents/jquery.vmap.south-america.js' %}"></script>
+		<script src="{% static 'js/examples/examples.charts.js' %}"></script>
 		{% endblock scripts %}
-
-	</body>
-</html>
