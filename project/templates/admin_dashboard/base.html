@@ -47,7 +47,7 @@
 			<!-- start: header -->
 			<header class="header">
 				<div class="logo-container">
-					<a href="../2.2.0" class="logo">
+					<a href="{% url 'admin-dashboard' %}" class="logo">
 						<img src="{% static 'img/logo.png' %}" width="120" height="32" alt="Face AMS Admin" />
 					</a>
 					<div class="d-md-none toggle-sidebar-left" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened">
@@ -143,7 +143,7 @@
 				                        <ul class="nav nav-children">
                                             {% for class in classes %}
 				                            <li>
-				                                <a class="nav-link" href="#">
+				                                <a class="nav-link" href="{% url 'view-students' class.pk %}" >
 				                                    {{class.name}}
 												</a>
                                             </li>
@@ -151,7 +151,7 @@
 				                        </ul>
 									</li>
 									<li>
-				                        <a class="nav-link" href="#">
+				                        <a class="nav-link" href="{% url 'register-student' %}">
 				                            <i class="fas fa-plus-square" aria-hidden="true"></i>
 				                            <span>Register Student</span>
 										</a>
@@ -164,13 +164,12 @@
 				</aside>
                 <!-- end: sidebar -->
                 
-				<div id="table-div"></div>
                 {% block content %}
                 {% endblock content %}
 			</div>
 		</section>
-        {% block scripts %}
-        {% endblock scripts %}
+
+
 		<!-- Vendor -->
 		<script src="{% static 'vendor/jquery/jquery.js' %}"></script>
 		<script src="{% static 'vendor/jquery-browser-mobile/jquery.browser.mobile.js' %}"></script>
@@ -191,5 +190,7 @@
 		<!-- Theme Initialization Files -->
 		<script src="{% static 'js/theme.init.js' %}"></script>
 
+        {% block scripts %}
+		{% endblock scripts %}
 	</body>
 </html>

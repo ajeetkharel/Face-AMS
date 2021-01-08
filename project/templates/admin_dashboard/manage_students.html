@@ -1,0 +1,77 @@
+{% extends 'admin_dashboard/base.html' %}
+{% load static %}
+{% block head %}
+<!-- Specific Page Vendor CSS -->
+<link rel="stylesheet" href="{% static 'vendor/select2/css/select2.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/select2-bootstrap-theme/select2-bootstrap.min.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/datatables/media/css/dataTables.bootstrap4.css' %}" />
+{% endblock head %}
+    {% block content %}
+				<section role="main" class="content-body pt-5">
+					<!-- start: page -->
+						<div class="row">
+							<div class="col">
+								<section class="card">
+									<header class="card-header">
+										<h2 class="card-title">{{class.name}}</h2>
+									</header>
+									<div class="card-body">
+										<table class="table table-bordered table-striped mb-0" id="datatable-tabletools">
+											<thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Full Name</th>
+                                                    <th>Contact</th>
+                                                    <th>Address</th>
+                                                    <th>Track Attendance</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for student in students %}
+                                                <tr>
+                                                    <td>{{student.id}}</td>
+                                                    <td>
+                                                        {{student.user.full_name}}
+                                                    </td>
+                                                    <td>{{student.contact}}</td>
+                                                    <td>{{student.address}}</td>
+                                                    <td>
+                                                        <button class="btn btn-primary">View Attendance</button>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+										</table>
+									</div>
+								</section>
+							</div>
+						</div>
+					<!-- end: page -->
+				</section>
+            {% endblock content %}
+        {% block scripts %}
+
+		<!-- Specific Page Vendor -->
+		<script src="{% static 'vendor/select2/js/select2.js' %}"></script>
+		<script src="{% static 'vendor/datatables/media/js/jquery.dataTables.min.js' %}"></script>
+		<script src="{% static 'vendor/datatables/media/js/dataTables.bootstrap4.min.js' %}"></script>
+		<script src="{% static 'vendor/datatables/extras/TableTools/Buttons-1.4.2/js/dataTables.buttons.min.js' %}"></script>
+		<script src="{% static 'vendor/datatables/extras/TableTools/Buttons-1.4.2/js/buttons.bootstrap4.min.js' %}"></script>
+		<script src="{% static 'vendor/datatables/extras/TableTools/Buttons-1.4.2/js/buttons.html5.min.js' %}"></script>
+		<script src="{% static 'vendor/datatables/extras/TableTools/Buttons-1.4.2/js/buttons.print.min.js' %}"></script>
+		<script src="{% static 'vendor/datatables/extras/TableTools/JSZip-2.5.0/jszip.min.js' %}"></script>
+		<script src="{% static 'vendor/datatables/extras/TableTools/pdfmake-0.1.32/pdfmake.min.js' %}"></script>
+		<script src="{% static 'vendor/datatables/extras/TableTools/pdfmake-0.1.32/vfs_fonts.js' %}"></script>
+		
+		<!-- Theme Base, Components and Settings -->
+		<script src="{% static 'js/theme.js' %}"></script>
+		
+		<!-- Theme Custom -->
+		<script src="{% static 'js/custom.js' %}"></script>
+		
+		<!-- Theme Initialization Files -->
+		<script src="{% static 'js/theme.init.js' %}"></script>
+
+		<!-- Examples -->
+		<script src="{% static 'js/examples/examples.datatables.tabletools.js' %}"></script>
+        {% endblock scripts %}

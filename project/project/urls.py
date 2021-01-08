@@ -26,6 +26,7 @@ from account import views as accountviews
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('base.urls')),
+    path('', include('school.urls')),
     path('', accountviews.login_user, name="user-login"),
     path('logout/', LogoutView.as_view(), name='user-logout'),
 
