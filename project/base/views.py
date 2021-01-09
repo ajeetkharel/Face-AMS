@@ -23,13 +23,19 @@ def admin_dashboard(request):
     }
     return render(request, "admin_dashboard/index.html", context=context)
 
-def register_student(request):
-    return render(request, 'admin_dashboard/register_student.html')
+def register_students(request):
+    classes = Class.objects.all()
+
+    context = {
+        'title': "Register Students",
+        'classes': classes,
+    }
+    return render(request, 'admin_dashboard/register_students.html', context=context)
 
 def gen(camera):
-    models_dir = os.path.join(module_dir)
-    prototxtPath = os.path.join(models_dir, "models", "Resnet_SSD_deploy.prototxt")
-    weightsPath = os.path.join(models_dir, "models", "Res10_300x300_SSD_iter_140000.caffemodel")
+    models_dir = os.path.join(module_dir, "models")
+    prototxtPath = os.path.join(models_dir, "Resnet_SSD_deploy.prototxt")
+    weightsPath = os.path.join(models_dir, "Res10_300x300_SSD_iter_140000.caffemodel")
     faceNet = cv2.dnn.readNetFromCaffe(
         prototxtPath, weightsPath)
     while True:
@@ -56,13 +62,14 @@ def gen(camera):
                 (startX, startY) = (max(0, startX), max(0, startY))
                 (endX, endY) = (min(w - 1, endX), min(h - 1, endY))
 
-                cv2.rectangle(frame, (startX, startY), (endX, endY), (255,0,0), 2)
+                cv2.rectangle(frame, (startX-10, startY-10), (endX-10, endY-10), (255,0,0), 2)
         ret, jpeg = cv2.imencode('.jpg', frame)
         yield(b'--frame\r\n'
         b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
 
 @gzip.gzip_page
 def attached_cam(request): 
+    models_dir = os.path.join(module_dir, "models")
     return StreamingHttpResponse(gen(cv2.VideoCapture(0)),content_type="multipart/x-mixed-replace;boundary=frame")
 
 def ip_cam(request, ip):

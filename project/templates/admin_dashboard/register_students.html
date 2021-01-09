@@ -1,0 +1,109 @@
+{% extends 'admin_dashboard/base.html' %}
+{% block content %}
+<section role="main" class="content-body">
+    <header class="page-header">
+        <h2>Register Student</h2>
+    
+        <div class="right-wrapper text-right">
+            <ol class="breadcrumbs">
+                <li>
+                    <a href="{% url 'admin-dashboard' %}">
+                        <i class="fas fa-home"></i>
+                    </a>
+                </li>
+                <li><span>Register Student &nbsp;</span></li>
+                <li></li>
+            </ol>
+        </div>
+    </header>
+    <div class="row">
+        <div class="col-auto">
+            <button id="start_webcam" class="btn btn-success">Start Webcam</button>
+        </div>
+        <div class="col-auto align-self-center">Or,</div>
+        <div class="col-auto">
+            <div class="input-group">
+                <input id="ip" type="text" class="form-control" placeholder="Enter IP Address" aria-label="IP Cam">
+                <div class="input-group-append">
+                  <button id="start_ipcam" class="btn btn-success" type="button">Start</button>
+                </div>
+            </div>
+        </div>
+    </div>   
+    <div class="row">
+        <div class="col-auto">
+            <img style="max-height: 500px;" id="cam_stream" class="img-thumbnail" src="" alt="" srcset="">
+        </div>
+    </div>
+    <div id="after_stream" class="mt-2" style="display: none;">
+        <div class="row">
+            <div class="col-12">
+                <button id="face_capture" class="btn btn-primary">Capture Face</button>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    $("#start_webcam").click(function(){
+        if ($(this).text() == "Start Webcam"){
+            document.getElementById("cam_stream").src = "{% url 'attached-cam' %}";
+            $(this).text("Stop Webcam");
+            $(this).toggleClass("btn-success");
+            $(this).toggleClass("btn-danger");
+            $("#after_stream").css({
+                display: "block",
+            })
+            $("#face_capture").html("Capture Face").css({
+            "cursor": "default",
+            "pointer-events": "auto"
+        });
+
+        }
+        else{
+            document.getElementById("cam_stream").src = "";
+            $(this).text("Start Webcam");
+            $(this).toggleClass("btn-success");
+            $(this).toggleClass("btn-danger");
+            $("#after_stream").css({
+                display: "none",
+            })
+        }
+    });
+    $("#start_ipcam").click(function(){
+        if ($(this).text() == "Start"){
+            var ip = $("ip").text();
+            document.getElementById("cam_stream").src = "{% url 'ip-cam' 'addr' %}".replace("addr", ip);
+            $(this).text("Stop");
+            $(this).toggleClass("btn-success");
+            $(this).toggleClass("btn-danger");
+        }
+        else{
+            document.getElementById("cam_stream").src = "";
+            $(this).text("Start");
+            $(this).toggleClass("btn-success");
+            $(this).toggleClass("btn-danger");
+        }
+    });
+    $("#face_capture").click(function(){
+        var canvas = document.createElement('canvas');
+        var context = canvas.getContext('2d');
+        var img = document.getElementById('cam_stream');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        context.drawImage(img, 0, 0, img.width, img.height);
+        var myData = canvas.toDataURL();
+        console.log(myData);
+        $(this).html("Captured").css({
+            "cursor": "wait",
+            "pointer-events": "none"
+        });
+        $("#cam_stream").attr("src", myData);
+        $("#start_webcam").text("Start Webcam");
+        $("#start_webcam").toggleClass("btn-success");
+        $("#start_webcam").toggleClass("btn-danger");
+    });
+</script>
+{% endblock scripts %}.
