@@ -74,6 +74,7 @@ class User(AbstractBaseUser):
         return self.is_admin
 
 class Student(models.Model):
+    student_id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     contact = models.CharField(max_length=255, default='', blank=True)
     address = models.CharField(max_length=255, default='', blank=True)

@@ -1,4 +1,8 @@
 {% extends 'admin_dashboard/base.html' %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/register_students.css' %}">
+{% endblock head %}
 {% block content %}
 <section role="main" class="content-body">
     <header class="page-header">
@@ -34,12 +38,45 @@
         <div class="col-auto">
             <img style="max-height: 500px;" id="cam_stream" class="img-thumbnail" src="" alt="" srcset="">
         </div>
-    </div>
-    <div id="after_stream" class="mt-2" style="display: none;">
-        <div class="row">
-            <div class="col-12">
-                <button id="face_capture" class="btn btn-primary">Capture Face</button>
+        <div id="" class="mt-2 after_stream" style="display: none;">
+            <div class="col-auto">
+                <img style="max-height: 200px;" id="face_stream" class="img-thumbnail" src="" alt="" srcset="">
             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div id="" class="col-auto after_stream" style="display: none;">
+            <button id="face_capture" class="btn btn-primary">Capture Face</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-auto reg-details">
+            <div class="row">
+                <h3>Student Details</h3>
+            </div>
+            <form method="POST" class="form">
+                <div class="form-group row">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" name="id" id="id">
+                </div>
+                <div class="form-group row">
+                    <label for="full_name">Full Name</label>
+                    <input type="text" class="form-control" name="full_name" id="full_name">
+                </div>
+                <div class="form-group row">
+                  <label for="emailAddress">Email address</label>
+                  <input type="email" class="form-control" name="email" id="emailAddress" placeholder="name@example.com">
+                </div>
+                <div class="form-group row">
+                  <label for="exampleFormControlSelect1">Class</label>
+                  <select class="form-control" id="exampleFormControlSelect1">
+                    <option selected disabled hidden>Choose..</option>
+                    {% for class in classes %}
+                    <option>{{class.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+            </form>
         </div>
     </div>
 </section>
@@ -47,27 +84,49 @@
 
 {% block scripts %}
 <script>
+    $.ajaxSetup({ 
+        beforeSend: function(xhr, settings) {
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie != '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                // Only send the token to relative URLs i.e. locally.
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+            }
+        } 
+    });
+
     $("#start_webcam").click(function(){
         if ($(this).text() == "Start Webcam"){
             document.getElementById("cam_stream").src = "{% url 'attached-cam' %}";
+            // document.getElementById("face_stream").src = "{% url 'attached-cam' %}";
+
             $(this).text("Stop Webcam");
             $(this).toggleClass("btn-success");
             $(this).toggleClass("btn-danger");
-            $("#after_stream").css({
+            $(".after_stream").css({
                 display: "block",
             })
-            $("#face_capture").html("Capture Face").css({
-            "cursor": "default",
-            "pointer-events": "auto"
-        });
-
         }
         else{
             document.getElementById("cam_stream").src = "";
+            document.getElementById("face_stream").src = "";
             $(this).text("Start Webcam");
             $(this).toggleClass("btn-success");
             $(this).toggleClass("btn-danger");
-            $("#after_stream").css({
+            $(".after_stream").css({
                 display: "none",
             })
         }
@@ -95,15 +154,25 @@
         canvas.height = img.height;
         context.drawImage(img, 0, 0, img.width, img.height);
         var myData = canvas.toDataURL();
-        console.log(myData);
-        $(this).html("Captured").css({
-            "cursor": "wait",
-            "pointer-events": "none"
+        data = {
+            'imageData': myData,
+            'width': img.width,
+            'height': img.height,
+        }
+        $.ajax({
+            url: '{% url "attached-cam" %}',
+            type: 'POST',
+            data: data,
+            dataType: "json",
+            success: function(data) {
+                var image = 'data:image/jpeg;base64,'+data["image"];
+                console.log(image);
+                $("#face_stream").attr("src", image);
+                $("#reg_details").css({
+                    display: 'block';
+                })
+            }
         });
-        $("#cam_stream").attr("src", myData);
-        $("#start_webcam").text("Start Webcam");
-        $("#start_webcam").toggleClass("btn-success");
-        $("#start_webcam").toggleClass("btn-danger");
     });
 </script>
-{% endblock scripts %}.
+{% endblock scripts %}
