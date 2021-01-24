@@ -77,7 +77,7 @@
 							<figure class="profile-picture">
 								<img src="{% static 'img/!logged-user.jpg' %}" alt="Joseph Doe" class="rounded-circle" data-lock-picture="{% static 'img/!logged-user.jpg' %}" />
 							</figure>
-							<div class="profile-info" data-lock-name="John Doe" data-lock-email="johndoe@okler.com">
+							<div class="profile-info" data-lock-name="{{user.full_name}}" data-lock-email="{{user.email}}">
 								<span class="name">{{user.full_name}}</span>
 								{% if user.is_admin %}
 								<span class="role">administrator</span>

@@ -50,7 +50,6 @@ class User(AbstractBaseUser):
         max_length=255,
         verbose_name="Full Name",
     )
-    company_name = models.CharField(max_length=255, blank=True, verbose_name="Company Name")
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
@@ -74,12 +73,12 @@ class User(AbstractBaseUser):
         return self.is_admin
 
 class Student(models.Model):
-    student_id = models.AutoField(primary_key=True)
+    student_id = models.AutoField(primary_key=True, auto_created=True, default=0)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     contact = models.CharField(max_length=255, default='', blank=True)
     address = models.CharField(max_length=255, default='', blank=True)
     face_image = models.ImageField(upload_to="face_images/", default="face_images/default.jpg")
-    face_encoding = models.CharField(max_length=1024, blank=True)
+    face_encoding = models.BinaryField(blank=True)
     study_class = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True)
 
 

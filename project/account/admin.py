@@ -83,9 +83,13 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ()
 
 
+class StudentAdmin(admin.ModelAdmin):
+    readonly_fields = ('student_id', )
+
+
 # Now register the new UserAdmin...
 admin.site.register(User, UserAdmin)
-admin.site.register(Student)
+admin.site.register(Student, StudentAdmin)
 
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.

@@ -44,37 +44,65 @@
             </div>
         </div>
     </div>
+    <div class="row" id="register_success" style="display: none; ">
+        <div class="h2 text-success">Registration Success - Mail sent</div>
+        <div class="h3">Student Details</div>
+        <div class="h6">
+            ID: <b id="registered_id"></b>
+        </div>
+        <div class="h6">
+            Email: <b id="registered_email"></b>
+        </div>
+        <div class="h6">
+            Password: <b id="registered_password"></b>
+        </div>
+    </div>
     <div class="row">
         <div id="" class="col-auto after_stream" style="display: none;">
             <button id="face_capture" class="btn btn-primary">Capture Face</button>
         </div>
     </div>
-    <div class="row">
-        <div class="col-auto reg-details">
+    <div class="row p-2">
+        <div class="col-auto" id="reg-details" style="display: none;">
             <div class="row">
                 <h3>Student Details</h3>
             </div>
-            <form method="POST" class="form">
+            <form id="student_register_form" method="POST" class="form" enctype="multipart/form-data">
+                {% csrf_token %}
                 <div class="form-group row">
-                    <label for="id">ID</label>
-                    <input type="text" class="form-control" name="id" id="id">
+                    <label for="student_id">Student ID</label>
+                    <input type="number" class="form-control" name="student_id" id="student_id" required>
+                    <div id="id_error" class="text-danger">{{id_error_msg}}</div>
                 </div>
                 <div class="form-group row">
-                    <label for="full_name">Full Name</label>
-                    <input type="text" class="form-control" name="full_name" id="full_name">
+                    <label for="full_name" >Full Name</label>
+                    <input type="text" class="form-control" name="full_name" id="full_name" required>
                 </div>
                 <div class="form-group row">
-                  <label for="emailAddress">Email address</label>
-                  <input type="email" class="form-control" name="email" id="emailAddress" placeholder="name@example.com">
+                    <label for="emailAddress">Email address</label>
+                    <input type="email" class="form-control" name="email" id="emailAddress" placeholder="name@example.com" required>
+                    <div id="email_error" class="text-danger">{{email_error_msg}}</div>
                 </div>
                 <div class="form-group row">
                   <label for="exampleFormControlSelect1">Class</label>
-                  <select class="form-control" id="exampleFormControlSelect1">
+                  <select name="class" class="form-control" id="exampleFormControlSelect1" required>
                     <option selected disabled hidden>Choose..</option>
                     {% for class in classes %}
-                    <option>{{class.name}}</option>
+                    <option value="{{class.pk}}">{{class.name}}</option>
                     {% endfor %}
                   </select>
+                </div>
+                <div class="form-group row">
+                    <label for="contact">Contact</label>
+                    <input type="tel" class="form-control" name="contact" id="contact">
+                </div>
+                <div class="form-group row">
+                    <label for="address">Address</label>
+                    <input type="text" class="form-control" name="address" id="address">
+                </div>
+                <input name="student_face" id="student_face" type="text" src="" alt="" hidden>
+                <div class="row">
+                    <button class="btn btn-primary" type="submit">Register</button>
                 </div>
             </form>
         </div>
@@ -119,6 +147,9 @@
             $(".after_stream").css({
                 display: "block",
             })
+            $("#register_success").css({
+                display: "none",
+            })
         }
         else{
             document.getElementById("cam_stream").src = "";
@@ -128,6 +159,9 @@
             $(this).toggleClass("btn-danger");
             $(".after_stream").css({
                 display: "none",
+            })
+            $("#reg-details").css({
+                display: 'none',
             })
         }
     });
@@ -166,13 +200,40 @@
             dataType: "json",
             success: function(data) {
                 var image = 'data:image/jpeg;base64,'+data["image"];
-                console.log(image);
                 $("#face_stream").attr("src", image);
-                $("#reg_details").css({
-                    display: 'block';
+                $("#reg-details").css({
+                    display: 'block',
                 })
+                $("#student_face").attr('value', data["image"]);
             }
         });
+    });
+    $(document).on('submit', '#student_register_form', function(e) {
+        e.preventDefault();
+        var frm = $('#student_register_form')
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serialize(),
+            success:function (response) {
+                if (response["error"])
+                {
+                    $("#id_error").text(response["id_error"]);
+                    $("#email_error").text(response["email_error"]);
+                }
+                else
+                {
+                    $("#start_webcam").text("Stop Webcam").click();
+                    $("#register_success").css({
+                        display: "block",
+                    })
+                    $("#registered_id").text(response["student_id"]);
+                    $("#registered_email").text(response["email"]);
+                    $("#registered_password").text(response["password"]);
+                }
+            }
+        })
+        return false;
     });
 </script>
 {% endblock scripts %}

@@ -1,8 +1,12 @@
 from django.shortcuts import render
 from django.http.response import StreamingHttpResponse, HttpResponse
 from django.views.decorators import gzip
+from django.core.files.base import ContentFile
+from django.contrib.auth.base_user import BaseUserManager
+from django.core.mail import send_mail
+from django.conf import settings
 
-from account.models import Student
+from account.models import Student, User
 from school.models import *
 
 import cv2
@@ -12,7 +16,9 @@ from PIL import Image
 import json
 import base64
 import io
+import pickle
 import re
+import face_recognition
 module_dir = os.path.dirname(__file__)
 
 def admin_dashboard(request):
@@ -36,7 +42,54 @@ def register_students(request):
     }
 
     if request.method == "POST":
+        message = {"error": False}
+        if Student.objects.filter(student_id = int(request.POST["student_id"])).exists():
+            message["id_error"] = "ID already exists"
+            message["error"] = True
         
+        if User.objects.filter(email=request.POST["email"]).exists():
+            message["email_error"] = "Email already exists"
+            message['error'] = True
+
+        if not message["error"]:
+            face_image = request.POST["student_face"]
+            user = User.objects.create(full_name=request.POST["full_name"], email=request.POST["email"])
+            password = BaseUserManager().make_random_password()
+            user.set_password(password)
+            user.save()
+
+            student = Student.objects.create(student_id=int(request.POST["student_id"]), user=user, contact=request.POST["contact"], address=request.POST["address"], study_class=Class.objects.get(pk=int(request.POST["class"])))
+            image_data = base64.b64decode(face_image.replace("data:image/jpeg;base64,", ""))
+            image = Image.open(io.BytesIO(image_data))
+
+
+            
+            img_io = io.BytesIO()
+            image.save(img_io, format='JPEG', quality=100)
+            img_content = ContentFile(img_io.getvalue(), f'{request.POST["student_id"]}_face.jpg')
+
+            encoding = face_recognition.face_encodings(np.array(image))
+            np_bytes = pickle.dumps(encoding)
+            np_base64 = base64.b64encode(np_bytes)
+            student.face_encoding = np_base64
+
+            #https://stackoverflow.com/questions/46699238/how-to-make-a-numpy-array-field-in-django
+            
+            student.face_image = img_content
+            student.save()
+
+            message["student_id"] = student.student_id
+            message["email"] = student.user.email
+            message["password"] = password
+
+            send_mail('Face AMS Account Details',
+            f"Please don't share this to anyone \n \
+    Email: {request.POST['email']} \n \
+    Password: {password} ", settings.EMAIL_HOST_USER, [request.POST["email"]])
+
+            # return render(request, 'admin_dashboard/register_students.html', context=context)
+        return HttpResponse(json.dumps(message), content_type='application/json')
+
 
     return render(request, 'admin_dashboard/register_students.html', context=context)
 
@@ -69,10 +122,6 @@ def attached_cam(request):
 
         faceNet.setInput(blob)
         detections = faceNet.forward()
-
-        faces = []
-        locs = []
-        preds = []
 
         for i in range(0, detections.shape[2]):
             confidence = detections[0, 0, i, 2]

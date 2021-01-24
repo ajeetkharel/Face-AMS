@@ -1364,11 +1364,11 @@ window.theme.fn = {
 
 		formEvents: function( $form ) {
 			var _self = this;
-
+			console.log("Hello world");
 			$form.on( 'submit', function( e ) {
 				e.preventDefault();
-
-				_self.hide();
+				
+				// _self.hide();
 			});
 		},
 
