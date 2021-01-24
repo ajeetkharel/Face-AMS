@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
-from .models import User, Student
+from .models import User
 
 
 class UserCreationForm(forms.ModelForm):
@@ -83,13 +83,8 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ()
 
 
-class StudentAdmin(admin.ModelAdmin):
-    readonly_fields = ('student_id', )
-
-
 # Now register the new UserAdmin...
 admin.site.register(User, UserAdmin)
-admin.site.register(Student, StudentAdmin)
 
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.

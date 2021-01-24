@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from school.models import *
-from account.models import Student
 
 
 def view_students(request, id):
@@ -21,12 +20,14 @@ def view_attendance(request, id):
     cls = Class.objects.get(id=id)
     students = Student.objects.filter(study_class=cls)
     classes = Class.objects.all()
-    attendances = Attendance.objects.all()
+    attendances = Attendance.objects.filter(student__in=students)
 
     context = {
         'class': cls,
         'students':students,
         'classes': classes,
+        'attendances': attendances,
     }
 
-    return render(request, "admin_dashboard/manage_students.html", context=context)
+    return render(request, "admin_dashboard/manage_attendance.html", context=context)
+    

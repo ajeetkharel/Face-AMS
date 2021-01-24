@@ -6,7 +6,7 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.core.mail import send_mail
 from django.conf import settings
 
-from account.models import Student, User
+from account.models import User
 from school.models import *
 
 import cv2

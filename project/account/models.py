@@ -3,7 +3,6 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
 from PIL import Image
-from school.models import Class
 
 class MyUserManager(BaseUserManager):
     def create_user(self, email, password=None):
@@ -71,16 +70,3 @@ class User(AbstractBaseUser):
     @property
     def is_superuser(self):
         return self.is_admin
-
-class Student(models.Model):
-    student_id = models.AutoField(primary_key=True, auto_created=True, default=0)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    contact = models.CharField(max_length=255, default='', blank=True)
-    address = models.CharField(max_length=255, default='', blank=True)
-    face_image = models.ImageField(upload_to="face_images/", default="face_images/default.jpg")
-    face_encoding = models.BinaryField(blank=True)
-    study_class = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True)
-
-
-    def __str__(self):
-        return self.user.email
