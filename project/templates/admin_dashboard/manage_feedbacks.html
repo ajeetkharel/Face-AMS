@@ -1,0 +1,26 @@
+{% extends "admin_dashboard/base.html" %}
+{% block content %}
+
+<section role="main" class="content-body">
+    <header class="page-header">
+        <h2>Feedbacks</h2>
+    
+        <div class="right-wrapper text-right">
+            <ol class="breadcrumbs">
+                <li>
+                    <a href="{% url 'dashboard' %}">
+                        <i class="fas fa-home"></i>
+                    </a>
+                </li>
+                <li><span>Feedbacks &nbsp;</span></li>
+                <li></li>
+            </ol>
+        </div>
+    </header>
+    <div class="row">
+        {% for feedback in feedbacks %}
+            {{feedback.name}}
+        {% endfor %}
+    </div>
+</section>
+{% endblock content %}

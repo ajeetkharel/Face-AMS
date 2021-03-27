@@ -47,7 +47,7 @@
 			<!-- start: header -->
 			<header class="header">
 				<div class="logo-container">
-					<a href="{% url 'admin-dashboard' %}" class="logo">
+					<a href="{% url 'dashboard' %}" class="logo">
 						<img src="{% static 'img/logo.png' %}" width="120" height="32" alt="Face AMS Admin" />
 					</a>
 					<div class="d-md-none toggle-sidebar-left" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened">
@@ -130,7 +130,7 @@
 				            
 				                <ul class="nav nav-main">
 				                    <li>
-				                        <a class="nav-link" href="{% url 'admin-dashboard' %}">
+				                        <a class="nav-link" href="{% url 'dashboard' %}">
 				                            <i class="fas fa-home" aria-hidden="true"></i>
 				                            <span>Dashboard</span>
 				                        </a>                        
@@ -166,11 +166,18 @@
 				                        </ul>
 									</li>
 									<li>
+				                        <a class="nav-link" href="{% url 'manage-feedbacks' %}">
+				                            <i class="fas fa-plus-square" aria-hidden="true"></i>
+				                            <span>Manage Feedbacks</span>
+										</a>
+									</li>
+									<li>
 				                        <a class="nav-link" href="{% url 'register-students' %}">
 				                            <i class="fas fa-plus-square" aria-hidden="true"></i>
 				                            <span>Register Student</span>
 										</a>
 									</li>
+									
 				                </ul>
 				            </nav>
 				        </div>

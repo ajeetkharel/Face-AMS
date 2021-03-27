@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
                 ('student_id', models.AutoField(auto_created=True, default=0, primary_key=True, serialize=False)),
                 ('contact', models.CharField(blank=True, default='', max_length=255)),
                 ('address', models.CharField(blank=True, default='', max_length=255)),
-                ('face_image', models.ImageField(default='face_images/default.jpg', upload_to='face_images/')),
+                ('profile_image', models.ImageField(default='profile_images/default.jpg', upload_to='face_images/')),
                 ('face_encoding', models.BinaryField(blank=True)),
                 ('study_class', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='school.class')),
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),

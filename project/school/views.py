@@ -31,3 +31,26 @@ def view_attendance(request, id):
 
     return render(request, "admin_dashboard/manage_attendance.html", context=context)
     
+def manage_feedbacks(request):
+    return render(request, "admin_dashboard/manage_feedbacks.html")
+
+
+def student_attendance(request):
+    student = Student.objects.get(user=request.user)
+    attendances = Attendance.objects.filter(student=student)
+    context = {
+        'title': 'Student Attendance',
+        'attendances': attendances,
+        'student': student
+    }
+
+    return render(request, 'student_dashboard/student_attendance.html', context=context)
+
+
+def student_profile(request):
+    student = Student.objects.get(user=request.user)
+    context = {
+        'title': 'Student Profile',
+        'student': student
+    }
+    return render(request, "student_dashboard/student_profile.html", context=context)

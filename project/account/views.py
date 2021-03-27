@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 
 def login_user(request):
     if request.user.is_authenticated:
-        return redirect('admin-dashboard')
+        return redirect('dashboard')
     else:
         message = ''
         if request.method == "POST":
@@ -21,14 +21,14 @@ def login_user(request):
             user = authenticate(request, email=email, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('admin-dashboard')
+                return redirect('dashboard')
             else:
                 message = "Invalid Credentials. Try again!"
         return render(request, 'admin_dashboard/login.html', context={'message':message, 'title': "Face AMS - Admin Login"})
 
 def register_user(request):
     if request.user.is_authenticated:
-        return redirect('admin-dashboard')
+        return redirect('dashboard')
     else:
         if request.method == "POST":
             return render(request, 'admin_dashboard/register.html', context={'form':form, 'title': "Register an Account"})

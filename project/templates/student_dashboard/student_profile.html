@@ -1,0 +1,84 @@
+{% extends 'student_dashboard/base.html' %}
+{% load static %}
+
+			<div class="inner-wrapper">
+				{% block content %}
+					<header class="page-header">
+						<h2>Student Profile</h2>
+					</header>
+
+					<!-- start: page -->
+
+					<div class="row">
+						<div class="col-lg-4 col-xl-3 mb-4 mb-xl-0">
+
+							<section class="card">
+								<div class="card-body">
+									<div class="thumb-info mb-3">
+										<img src="{{student.profile_image.url}}" class="rounded img-fluid" alt="John Doe">
+										<div class="thumb-info-title">
+											<span class="thumb-info-inner">{{user.full_name}}</span>
+											<span class="thumb-info-type">Student</span>
+										</div>
+									</div>
+								</div>
+							</section>
+						</div>
+						<div class="col-lg-8 col-xl-6">
+
+							<div class="tabs">
+								<ul class="nav nav-tabs tabs-primary">
+									<li class="nav-item active">
+										<a class="nav-link" href="#overview" data-toggle="tab">Overview</a>
+									</li>
+								</ul>
+								<div class="tab-content">
+									<div id="overview" class="tab-pane active">
+
+										<div class="p-3">
+											<h4 class="mb-3">Basic Info</h4>
+											
+											<div class="form-group row">
+												<label for="staticID" class="col-sm-2 col-form-label">ID:</label>
+												<div class="col-sm-10">
+												<input type="text" readonly class="form-control-plaintext" id="staticID" value="{{student.student_id}}">
+												</div>
+											</div>
+											<div class="form-group row">
+												<label for="staticClass" class="col-sm-2 col-form-label">Class:</label>
+												<div class="col-sm-10">
+												<input type="text" readonly class="form-control-plaintext" id="staticClass" value="{{student.study_class}}">
+												</div>
+											</div>
+											<div class="form-group row">
+												<label for="staticEmail" class="col-sm-2 col-form-label">Email:</label>
+												<div class="col-sm-10">
+												<input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{student.user.email}}">
+												</div>
+											</div>
+											<div class="form-group row">
+												<label for="staticContact" class="col-sm-2 col-form-label">Contact:</label>
+												<div class="col-sm-10">
+												<input type="text" readonly class="form-control-plaintext" id="staticContact" value="{{student.contact}}">
+												</div>
+											</div>
+											<div class="form-group row">
+												<label for="staticAddress" class="col-sm-2 col-form-label">Address:</label>
+												<div class="col-sm-10">
+												<input type="text" readonly class="form-control-plaintext" id="staticAddress" value="{{student.address}}">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endblock content %}
+			</div>
+		{% block script %}
+		<!-- Specific Page Vendor -->
+		<script src="{% static 'vendor/autosize/autosize.js' %}"></script>
+		{% endblock script %}
+	</body>
+</html>

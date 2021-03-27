@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http.response import StreamingHttpResponse, HttpResponse
 from django.views.decorators import gzip
 from django.core.files.base import ContentFile
@@ -21,18 +21,34 @@ import re
 import face_recognition
 module_dir = os.path.dirname(__file__)
 
-def admin_dashboard(request):
-    students = Student.objects.all()
-    classes = Class.objects.all()
-    subjects = Subject.objects.all()
-    routines = Routine.objects.all()
-    attendances = Attendance.objects.all()
 
-    context = {
-        'title': "Admin Dashboard",
-        'classes': classes,
-    }
-    return render(request, "admin_dashboard/index.html", context=context)
+def dashboard(request):
+    if request.user.is_staff:
+        students = Student.objects.all()
+        classes = Class.objects.all()
+        subjects = Subject.objects.all()
+        routines = Routine.objects.all()
+        attendances = Attendance.objects.all()
+
+        context = {
+            'title': "Admin Dashboard",
+            'classes': classes,
+        }
+        return render(request, "admin_dashboard/index.html", context=context)
+
+    else:
+        return redirect('student-dashboard')
+
+def student_dashboard(request):
+    if request.user.is_authenticated:
+        student = Student.objects.get(user=request.user)
+        context = {
+            'title': "Student Dashboard",
+            'student': student,
+        }
+        return render(request, "student_dashboard/index.html", context=context)
+    else:
+        return redirect('user-login')
 
 def register_students(request):
     classes = Class.objects.all()
@@ -52,14 +68,14 @@ def register_students(request):
             message['error'] = True
 
         if not message["error"]:
-            face_image = request.POST["student_face"]
+            profile_image = request.POST["student_face"]
             user = User.objects.create(full_name=request.POST["full_name"], email=request.POST["email"])
             password = BaseUserManager().make_random_password()
             user.set_password(password)
             user.save()
 
             student = Student.objects.create(student_id=int(request.POST["student_id"]), user=user, contact=request.POST["contact"], address=request.POST["address"], study_class=Class.objects.get(pk=int(request.POST["class"])))
-            image_data = base64.b64decode(face_image.replace("data:image/jpeg;base64,", ""))
+            image_data = base64.b64decode(profile_image.replace("data:image/jpeg;base64,", ""))
             image = Image.open(io.BytesIO(image_data))
 
 
@@ -75,7 +91,7 @@ def register_students(request):
 
             #https://stackoverflow.com/questions/46699238/how-to-make-a-numpy-array-field-in-django
             
-            student.face_image = img_content
+            student.profile_image = img_content
             student.save()
 
             message["student_id"] = student.student_id
@@ -89,8 +105,7 @@ def register_students(request):
 
             # return render(request, 'admin_dashboard/register_students.html', context=context)
         return HttpResponse(json.dumps(message), content_type='application/json')
-
-
+        
     return render(request, 'admin_dashboard/register_students.html', context=context)
 
 def gen(camera, face=False):

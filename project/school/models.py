@@ -13,7 +13,7 @@ class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     contact = models.CharField(max_length=255, default='', blank=True)
     address = models.CharField(max_length=255, default='', blank=True)
-    face_image = models.ImageField(upload_to="face_images/", default="face_images/default.jpg")
+    profile_image = models.ImageField(upload_to="profile_images/", default="profile_images/default.jpg")
     face_encoding = models.BinaryField(blank=True)
     study_class = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True)
 
@@ -38,7 +38,7 @@ class Attendance(models.Model):
         ("P", "Present"),
         ("A", "Absent")
     )
-    date = models.DateTimeField(auto_now=False, auto_now_add=True)
+    date = models.DateField(auto_now=False, auto_now_add=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True)
     routine = models.ForeignKey(Routine, on_delete=models.CASCADE, null=True)
     status = models.CharField(max_length=7, default="P", choices=STATUS_CHOICES)
