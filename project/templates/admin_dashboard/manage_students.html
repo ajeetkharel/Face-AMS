@@ -36,7 +36,7 @@
                                                     <td>{{student.contact}}</td>
                                                     <td>{{student.address}}</td>
                                                     <td>
-                                                        <a href="{% url 'student-attendance' %}" class="btn btn-primary">View Attendance</a>
+                                                        <a href="{% url 'admin-student-attendance' student.pk %}" class="btn btn-primary">View Attendance</a>
                                                     </td>
 													<!-- {{student.student_address}} -->
                                                 </tr>

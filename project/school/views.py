@@ -46,6 +46,18 @@ def student_attendance(request):
 
     return render(request, 'student_dashboard/student_attendance.html', context=context)
 
+def admin_student_attendance(request, pk):
+    student = Student.objects.get(pk=pk)
+    attendances = Attendance.objects.filter(student=student)
+    context = {
+        'title': 'Student Attendance',
+        'attendances': attendances,
+        'student': student,
+        'classes': Class.objects.all(),
+    }
+
+    return render(request, 'admin_dashboard/student_attendance.html', context=context)
+
 
 def student_profile(request):
     student = Student.objects.get(user=request.user)

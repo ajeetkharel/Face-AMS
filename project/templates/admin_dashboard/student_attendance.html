@@ -1,0 +1,77 @@
+{% extends 'admin_dashboard/base.html' %}
+{% load static %}
+{% block head %}
+<!-- Specific Page Vendor CSS -->
+<link rel="stylesheet" href="{% static 'vendor/select2/css/select2.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/select2-bootstrap-theme/select2-bootstrap.min.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/datatables/media/css/dataTables.bootstrap4.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/elusive-icons/css/elusive-icons.css' %}" />
+{% endblock head %}
+{% block content %}
+
+<section role="main" class="content-body pt-5">
+    <header class="page-header">
+        <h2>{{title}}</h2>
+    </header>
+    <!-- start: page -->
+    <div class="row">
+        <div class="col">
+            <section class="card">
+                <header class="card-header">
+                    <h2 class="card-title">{{student.user.full_name}}</h2>
+                </header>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped mb-0" id="datatable-tabletools">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th class="center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for attendance in attendances %}
+                            <tr>
+                                <td>{{attendance.date}} {{attendance.routine.time}}</td>
+
+                                {% if attendance.status == "P" %}
+                                <td class="center"><i class="el el-ok-sign"> Present</i></td>
+                                {% else %}
+                                <td class="center"><i class="el el-minus-sign"> Absent</i></td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+<!-- end: page -->
+{% endblock content %}
+{% block scripts %}
+
+<!-- Specific Page Vendor -->
+<script src="{% static 'vendor/select2/js/select2.js' %}"></script>
+<script src="{% static 'vendor/datatables/media/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'vendor/datatables/media/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'vendor/datatables/extras/TableTools/Buttons-1.4.2/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'vendor/datatables/extras/TableTools/Buttons-1.4.2/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'vendor/datatables/extras/TableTools/Buttons-1.4.2/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'vendor/datatables/extras/TableTools/Buttons-1.4.2/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'vendor/datatables/extras/TableTools/JSZip-2.5.0/jszip.min.js' %}"></script>
+<script src="{% static 'vendor/datatables/extras/TableTools/pdfmake-0.1.32/pdfmake.min.js' %}"></script>
+<script src="{% static 'vendor/datatables/extras/TableTools/pdfmake-0.1.32/vfs_fonts.js' %}"></script>
+
+<!-- Theme Base, Components and Settings -->
+<script src="{% static 'js/theme.js' %}"></script>
+
+<!-- Theme Custom -->
+<script src="{% static 'js/custom.js' %}"></script>
+
+<!-- Theme Initialization Files -->
+<script src="{% static 'js/theme.init.js' %}"></script>
+
+<!-- Examples -->
+<script src="{% static 'js/examples/examples.datatables.tabletools.js' %}"></script>
+{% endblock scripts %}

@@ -22,6 +22,7 @@
                                                 <tr>
                                                     <th>Student ID</th>
                                                     <th>Name</th>
+													<th>Date</th>
                                                     <th class="center">Status</th>
                                                 </tr>
                                             </thead>
@@ -31,6 +32,9 @@
                                                     <td>{{attendance.student.student_id}}</td>
                                                     <td>
                                                         {{attendance.student.user.full_name}}
+													</td>
+													<td>
+														{{attendance.date}}
 													</td>
 													{% if attendance.status == "P" %}
 														<td class="center"><i class="el el-ok-sign"> Present</i></td>
