@@ -20,27 +20,29 @@ class Student(models.Model):
     def __str__(self):
         return self.user.email
 
-class Routine(models.Model):
-    time = models.TimeField(auto_now=False, auto_now_add=False)
-    _class = models.ForeignKey(Class, on_delete=models.CASCADE, null=True)
-
-    def __str__(self):
-        return f"{self.time}"
-
 class Subject(models.Model):
     name = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
 
+class Routine(models.Model):
+    time = models.TimeField(auto_now=False, auto_now_add=False)
+    _class = models.ForeignKey(Class, on_delete=models.CASCADE, null=True)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return f"{self.time}"
+
+
 class Attendance(models.Model):
     STATUS_CHOICES = (
         ("P", "Present"),
         ("A", "Absent")
     )
-    date = models.DateField(auto_now=False, auto_now_add=True)
+    date = models.DateTimeField()
     student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True)
     routine = models.ForeignKey(Routine, on_delete=models.CASCADE, null=True)
     status = models.CharField(max_length=7, default="P", choices=STATUS_CHOICES)
     def __str__(self):
-        return f"{self.date}-{self.student.student_id}"
+        return f"{self.date}-{self.student.student_id}" 
