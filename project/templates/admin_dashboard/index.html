@@ -35,51 +35,54 @@
 								<div class="card-body">
 					
 									<!-- Morris: Line -->
-									<div class="chart chart-md" id="morrisLine"></div>
+									<!-- <div class="chart chart-md" id="morrisLine"></div>
 									<script type="text/javascript">
 					
 										var morrisLineData = [{
 											y: '2006',
-											a: 100,
-											b: 90
+											a: 100
 										}, {
 											y: '2007',
-											a: 75,
-											b: 65
+											a: 75
 										}, {
 											y: '2008',
-											a: 50,
-											b: 40
+											
+											a: 50
 										}, {
 											y: '2009',
-											a: 75,
-											b: 65
+											a: 75
 										}, {
 											y: '2010',
-											a: 50,
-											b: 40
+											a: 50
 										}, {
 											y: '2011',
-											a: 75,
-											b: 65
+											a: 75
 										}, {
 											y: '2012',
-											a: 100,
-											b: 90
+											a: 100
 										}, {
 											y: '2017',
-											a: 75,
-											b: 65
+											a: 75
 										}, {
 											y: '2017',
-											a: 100,
-											b: 90
+											a: 100
 										}];
 					
 										// See: js/examples/examples.charts.js for more settings.
 					
+									</script> -->
+									<canvas id="myChart" width="500" height="400"></canvas>
+
+									<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+									<script type="text/javascript" src="{% static 'js/Chart.min.js' %}"></script>
+									<script type="text/javascript">
+										$.get('{% url "line_chart_json" %}', function(data) {
+											var ctx = $("#myChart").get(0).getContext("2d");
+											new Chart(ctx, {
+												type: 'line', data: data
+											});
+										});
 									</script>
-					
 								</div>
 							</section>
 						</div>

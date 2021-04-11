@@ -6,6 +6,8 @@
 <link rel="stylesheet" href="{% static 'vendor/select2-bootstrap-theme/select2-bootstrap.min.css' %}" />
 <link rel="stylesheet" href="{% static 'vendor/datatables/media/css/dataTables.bootstrap4.css' %}" />
 <link rel="stylesheet" href="{% static 'vendor/elusive-icons/css/elusive-icons.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'vendor/daterangepicker/daterangepicker.css' %}" />
+
 {% endblock head %}
     {% block content %}
                     <header class="page-header">
@@ -16,10 +18,19 @@
 							<div class="col">
 								<section class="card">
 									<header class="card-header">
-										<h2 class="card-title">{{student.user.full_name}}</h2>
+										<div class="row p-0 m-0">
+											<div class="col-6 p-0 m-0 d-flex justify-content-start">
+												<h2 class="card-title">{{student.user.full_name}}</h2>
+											</div>
+											<div class="col-6 p-0 m-0 d-flex justify-content-end">
+												<form class="form" action="">
+													<input class="form-control" type="text" id="daterange" name="daterange" value="01/01/2021 - 01/15/2021" />
+												</form>
+											</div>
+										</div>
 									</header>
 									<div class="card-body">
-										<table class="table table-bordered table-striped mb-0" id="datatable-tabletools">
+										<table class="table table-bordered table-striped mb-0" id="attendances-table">
 											<thead>
                                                 <tr>
                                                     <th>Date</th>
@@ -49,7 +60,7 @@
 						</div>
 					<!-- end: page -->
             {% endblock content %}
-        {% block scripts %}
+        {% block script %}
 
 		<!-- Specific Page Vendor -->
 		<script src="{% static 'vendor/select2/js/select2.js' %}"></script>
@@ -74,4 +85,39 @@
 
 		<!-- Examples -->
 		<script src="{% static 'js/examples/examples.datatables.tabletools.js' %}"></script>
-        {% endblock scripts %}
+		
+		<script type="text/javascript" src="{% static 'vendor/daterangepicker/moment.min.js' %}"></script>
+		<script type="text/javascript" src="{% static 'vendor/daterangepicker/daterangepicker.min.js' %}"></script>
+		<script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/datetime-moment.js"></script>
+		<script>
+			var startDate;
+			var endDate;
+			$('#daterange').daterangepicker();
+			var table = $('#attendances-table').DataTable();
+			$.fn.dataTable.ext.search.push(
+				function( settings, data, dataIndex ) {
+					var min = parseDateValue(startDate);
+					var max = parseDateValue(endDate);
+							
+					var myDate = parseDateValue('{{ attendances.first.date|date:"m/d/Y" }}'); // use data for the age column
+					console.log(min, max, myDate);
+					if (myDate <= max && myDate >= min) {
+						return true;
+					}
+					return false;
+				}
+			);
+			$('#daterange').on('apply.daterangepicker', function(ev, picker) {
+				startDate = picker.startDate.format('MM/DD/YYYY');
+				endDate = picker.endDate.format('MM/DD/YYYY');
+				
+				table.draw();
+			});
+
+			function parseDateValue(rawDate) {
+				var dateArray= rawDate.split("/");
+				var parsedDate= dateArray[2] + dateArray[0] + dateArray[1];
+				return parsedDate;
+			}
+		</script>
+        {% endblock script %}

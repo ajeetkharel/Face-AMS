@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from school.models import *
-
+import datetime
 
 def view_students(request, id):
     cls = Class.objects.get(id=id)
@@ -28,6 +28,14 @@ def view_attendance(request, id):
         'classes': classes,
         'attendances': attendances,
     }
+
+    if request.is_ajax():
+        startdate = datetime.datetime.strptime(request.GET["startdate"], "%Y-%m-%d")
+        enddate = datetime.datetime.strptime(request.GET["enddate"], "%Y-%m-%d")
+
+        attendances = attendances.filter(date__gte=startdate, date__lte=enddate)
+        print(attendances)
+        context['attendances'] = attendances
 
     return render(request, "admin_dashboard/manage_attendance.html", context=context)
     
@@ -66,3 +74,5 @@ def student_profile(request):
         'student': student
     }
     return render(request, "student_dashboard/student_profile.html", context=context)
+
+
