@@ -46,4 +46,4 @@ class Attendance(models.Model):
     routine = models.ForeignKey(Routine, on_delete=models.CASCADE, null=True)
     status = models.CharField(max_length=7, default="P", choices=STATUS_CHOICES)
     def __str__(self):
-        return f"{self.date}-{self.student.student_id}" 
+        return f"{self.date}-{self.student.student_id}"
