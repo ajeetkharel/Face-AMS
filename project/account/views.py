@@ -1,7 +1,28 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
+import urllib
+from django.http.response import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
+from account.models import User
+
+def custom_redirect(url_name, *args, **kwargs):
+    import urllib
+    url = reverse(url_name, args = args)
+    params = urllib.parse.urlencode(kwargs)
+    return HttpResponseRedirect(url + "?%s" % params)
 
 def login_user(request):
+    logtype = 'student'
+    try:
+        logtype = request.GET['type']
+    except:
+        pass
+    return login_user_func(request, logtype)
+
+def login_user_func(request, logtype='student'):
+    user_map = {
+        False:'student',
+        True: 'admin'
+    }
     if request.user.is_authenticated:
         return redirect('dashboard')
     else:
@@ -15,16 +36,19 @@ def login_user(request):
             except:
                 pass
             if not remember_user:
-                print("Not remembering")
                 request.session.set_expiry(0)
                 request.session.modified = True
             user = authenticate(request, email=email, password=password)
+            user_m = User.objects.get(pk=user.pk)
             if user is not None:
-                login(request, user)
-                return redirect('dashboard')
+                if user_map[user_m.is_admin] == logtype:
+                    login(request, user)
+                    return redirect('dashboard')
+                else:
+                    return custom_redirect('user-login', type=user_map[user_m.is_admin])
             else:
                 message = "Invalid Credentials. Try again!"
-        return render(request, 'admin_dashboard/login.html', context={'message':message, 'title': "Face AMS - Admin Login"})
+        return render(request, f'{logtype}_dashboard/login.html', context={'message':message, 'title': "Face AMS - Student Login"})
 
 def register_user(request):
     if request.user.is_authenticated:
