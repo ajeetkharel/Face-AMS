@@ -100,7 +100,11 @@
 			var startDate;
 			var endDate;
 			$('#daterange').daterangepicker();
-			var table = $('#attendances-table').DataTable();
+			var table = $('#attendances-table').DataTable({
+				"order": [[ 2, "asc" ]],
+				ordering:true,
+				searching: false,
+			});
 			$.fn.dataTable.ext.search.push(
 				function( settings, data, dataIndex ) {
 					var min = parseDateValue(startDate);
