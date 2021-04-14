@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 import face_recognition
 import matplotlib.pyplot as plt
-from utils import Utils, Canvas
+from utils import BaseUtils, Canvas
 
 class AttendancePipeline:
     #The model directory where resnet ssd model is stored
@@ -45,7 +45,7 @@ class AttendancePipeline:
 
         students = pd.read_sql(f"SELECT * FROM school_student WHERE study_class_id == {_class}", self.conn)
         
-        students["face_encoding"] = students["face_encoding"].apply(Utils.decode)
+        students["face_encoding"] = students["face_encoding"].apply(BaseUtils.decode)
         
         users = pd.read_sql(f"SELECT * FROM account_user WHERE id in ({students['user_id'].tolist()})".replace('[','').replace(']', ''), self.conn)
         users["user_id"] = users["id"]
@@ -60,7 +60,7 @@ class AttendancePipeline:
 
     #     students = pd.read_sql(f"SELECT * FROM school_student", self.conn)
         
-    #     students["face_encoding"] = students["face_encoding"].apply(Utils.decode)
+    #     students["face_encoding"] = students["face_encoding"].apply(BaseUtils.decode)
         
     #     users = pd.read_sql(f"SELECT * FROM account_user WHERE id in ({students['user_id'].tolist()})".replace('[','').replace(']', ''), self.conn)
     #     users["user_id"] = users["id"]
@@ -107,8 +107,9 @@ class AttendancePipeline:
                             date = datetime.datetime.now()
                             current_time = date.time()
                             current_datetime = date.strftime('%Y-%m-%d %H:%M:%S')
-                            routine, start_time, end_time = self.check_routine(current_time, date.date())
+                            routine, subject, start_time, end_time = self.check_routine(current_time, date.date())
                             if routine is not None:
+                                self.canvas.update_routine(subject, start_time, end_time)
                                 attendance = (routine, int(student_details["student_id"]), 'P', current_datetime)
                                 if not self.attendance_exists(attendance, start_time, end_time):
                                     sql = ''' INSERT INTO school_attendance(routine_id, student_id, status, date)
@@ -143,10 +144,11 @@ class AttendancePipeline:
             
             if time >= start_time and time <= end_time:
                 return (row["id"],
+                        row["subject_id"],
                         datetime.datetime.combine(date, start_time).strftime('%Y-%m-%d %H:%M:%S'), 
                         datetime.datetime.combine(date, end_time).strftime('%Y-%m-%d %H:%M:%S'))
     
-        return None, None, None
+        return None, None, None, None
 
     def attendance_exists(self, attendance, start_time, end_time):
         result = pd.read_sql(f"SELECT * FROM school_attendance WHERE \

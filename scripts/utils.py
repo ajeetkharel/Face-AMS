@@ -1,15 +1,18 @@
 import cv2
-import base64
 import pickle
-import numpy as np
+import base64
+import sqlite3
 import datetime
+import numpy as np
+import pandas as pd
 
-class Utils:
+class BaseUtils:
     @staticmethod
     def decode(new_encoding):
         np_bytes = base64.b64decode(new_encoding)
         np_array = pickle.loads(np_bytes)
         return np_array[0]
+
 
 
 class Canvas:
@@ -22,6 +25,11 @@ class Canvas:
 
     thick = 1
     font_size = 0.9
+
+    #the directory where our project main database is stored
+    db_dir = os.path.join(os.path.dirname(
+        os.getcwd()), "project", "db.sqlite3")
+
 
     def __init__(self, _class):
         self._class = _class
@@ -57,9 +65,34 @@ class Canvas:
         
         self.update_titlebar()
 
+    def update_routine(self, subject_id, start_time, end_time):
+        self.routine_box = np.zeros((200, 400, 3), dtype=np.uint8)
+        self.routine_box[:] = (216, 216, 222)
+
+        text = "Current Routine"
+        (text_width, text_height) = cv2.getTextSize(text, self.font, self.font_size, self.thick)[0]
+        self.routine_box = cv2.putText(self.routine_box, text, (200 - text_width//2,text_height+15), self.font, self.font_size, (0,0,0), self.thick,cv2.LINE_AA)
+
+        th = text_height+15
+
+
+        conn = sqlite3.connect(self.db_dir)
+        subject = pd.read_sql(f"SELECT * FROM school_subject where id = {subject_id}", conn)
+
+
+
+        text = f"Subject: {subject}"
+        (text_width, text_height) = cv2.getTextSize(text, self.font, self.font_size, self.thick)[0]
+        self.routine_box = cv2.putText(self.routine_box, text, (200 - text_width//2,th+text_height+15), self.font, self.font_size, (0,0,0), self.thick,cv2.LINE_AA)
+
+        self.update_routinebox()
 
     def update_titlebar(self):
         self.frame[0:50] = self.title_bar
+
+    
+    def update_routinebox(self):
+        self.frame[50:250, :400] = self.routine_box
 
 
     def clear_titlebar(self):
