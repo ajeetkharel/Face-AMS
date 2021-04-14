@@ -104,6 +104,9 @@ class AttendancePipeline:
                         face_encodings = face_recognition.face_encodings(faceimage)
                         if face_encodings:
                             student_details = self.get_nearest_student(face_encodings)
+
+                            self.canvas.update_recognizedlist()
+
                             date = datetime.datetime.now()
                             current_time = date.time()
                             current_datetime = date.strftime('%Y-%m-%d %H:%M:%S')
@@ -122,6 +125,8 @@ class AttendancePipeline:
                                         (endX, endY), (255, 255, 0), 2)
                             cv2.putText(frame, student_details["full_name"], (startX, startY-40), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36,255,12), 2)
                             cv2.putText(frame, str(student_details["student_id"]), (startX, startY-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36,255,12), 2)
+
+                            self.canvas.update_camframe(frame)
                 cv2.imshow("Face AMS", self.canvas.frame)
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
