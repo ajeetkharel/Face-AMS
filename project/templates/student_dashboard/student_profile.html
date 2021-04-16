@@ -1,5 +1,10 @@
 {% extends 'student_dashboard/base.html' %}
 {% load static %}
+{% block head %}
+
+<link rel="stylesheet" href="{% static 'vendor/bootstrap-fileupload/bootstrap-fileupload.min.css' %}">k
+
+{% endblock head %}
 
 			<div class="inner-wrapper">
 				{% block content %}
@@ -15,12 +20,28 @@
 							<section class="card">
 								<div class="card-body">
 									<div class="thumb-info mb-3">
-										<img src="{{student.profile_image.url}}" class="rounded img-fluid" alt="John Doe">
+										<img src="{{student.user.profile_image.url}}" class="rounded img-fluid" alt="John Doe">
 										<div class="thumb-info-title">
 											<span class="thumb-info-inner">{{user.full_name}}</span>
 											<span class="thumb-info-type">Student</span>
 										</div>
 									</div>
+									<span class="thumb-info">
+										<form action="" method="post" enctype="multipart/form-data">
+											{% csrf_token %}
+											<div class="input-group" style="height: 33.5px !important;">
+												<div class="input-group-prepend" style="height: 33.5px !important;">
+												  <span class="input-group-text">Change picture</span>
+												</div>
+												<div class="custom-file">
+												  <input type="file" class="custom-file-input" id="inputGroupFile01"
+													aria-describedby="inputGroupFileAddon01" name="profile_image">
+												  <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+												</div>
+											</div><br>
+											<input type="submit" value="Update" class="btn btn-primary">
+										</form>
+									</span>
 								</div>
 							</section>
 						</div>
@@ -79,6 +100,12 @@
 		{% block script %}
 		<!-- Specific Page Vendor -->
 		<script src="{% static 'vendor/autosize/autosize.js' %}"></script>
+		<script>
+			$('input[type="file"]').change(function(e){
+				var fileName = e.target.files[0].name;
+				$('.custom-file-label').html(fileName);
+			});
+		</script>
 		{% endblock script %}
 	</body>
 </html>

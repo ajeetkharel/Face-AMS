@@ -13,7 +13,6 @@ class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     contact = models.CharField(max_length=255, default='', blank=True)
     address = models.CharField(max_length=255, default='', blank=True)
-    profile_image = models.ImageField(upload_to="profile_images/", default="profile_images/default.jpg")
     face_encoding = models.BinaryField(blank=True)
     study_class = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True)
 

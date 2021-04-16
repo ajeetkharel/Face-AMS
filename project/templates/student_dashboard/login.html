@@ -9,9 +9,10 @@
     <title>Student Login</title>
     <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.css' %}" />
     <link rel="stylesheet" href="{% static 'css/student_login.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/font-awesome/css/all.min.css' %}" />
 </head>
 
-<body>
+<body style="background: url('{% static "img/login_bg2.jpg" %}');">
     <div class="container mt-5">
         <section id="formHolder">
 
@@ -46,8 +47,13 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="loginPassword">Password</label>
-                                <input type="password" name="password" id="loginPassword" required autocomplete="new-password">
+                                <div class="input-group" id="show_hide_password">
+                                    <label for="loginPassword">Password</label>
+                                    <input type="password" name="password" id="loginPassword" required autocomplete="new-password">
+                                    <div class="input-group-prepend">
+                                        <a style="margin-left: -30px;z-index: 99; margin-top: 10px;"><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                    </div>
+                                </div>
                             </div>
                             <div class="CTA">
                                 <input type="submit" value="Login">
@@ -68,5 +74,19 @@
         $(function() {
         $('#login-form').disableAutoFill();
       });
+      $(document).ready(function() {
+        $("#show_hide_password a").on('click', function(event) {
+            event.preventDefault();
+                if($('#show_hide_password input').attr("type") == "text"){
+                    $('#show_hide_password input').attr('type', 'password');
+                    $('#show_hide_password i').addClass( "fa-eye-slash" );
+                    $('#show_hide_password i').removeClass( "fa-eye" );
+                }else if($('#show_hide_password input').attr("type") == "password"){
+                    $('#show_hide_password input').attr('type', 'text');
+                    $('#show_hide_password i').removeClass( "fa-eye-slash" );
+                    $('#show_hide_password i').addClass( "fa-eye" );
+                }
+            });
+        });
     </script>
 </html>

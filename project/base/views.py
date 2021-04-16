@@ -85,7 +85,7 @@ def register_students(request):
             
             img_io = io.BytesIO()
             image.save(img_io, format='JPEG', quality=100)
-            img_content = ContentFile(img_io.getvalue(), f'{request.POST["student_id"]}_face.jpg')
+            # img_content = ContentFile(img_io.getvalue(), f'{request.POST["student_id"]}_face.jpg')
 
             encoding = face_recognition.face_encodings(np.array(image))
             np_bytes = pickle.dumps(encoding)
@@ -94,7 +94,7 @@ def register_students(request):
 
             #https://stackoverflow.com/questions/46699238/how-to-make-a-numpy-array-field-in-django
             
-            student.profile_image = img_content
+            # student.profile_image = img_content
             student.save()
 
             message["student_id"] = student.student_id

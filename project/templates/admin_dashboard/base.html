@@ -1,6 +1,6 @@
 {% load static %}
 <!doctype html>
-<html class="fixed header-dark">
+<html class="fixed sidebar-light header-dark">
 	<head>
 
 		<!-- Basic -->
@@ -57,25 +57,12 @@
 			
 				<!-- start: search & user box -->
 				<div class="header-right">
-			
-					<form action="pages-search-results.html" class="search nav-form">
-						<div class="input-group">
-							<input type="text" class="form-control" name="q" id="q" placeholder="Search...">
-							<span class="input-group-append">
-								<button class="btn btn-default" type="submit"><i class="fas fa-search"></i></button>
-							</span>
-						</div>
-					</form>
-			
-					<span class="separator"></span>
-			
-			
 					<span class="separator"></span>
 			
 					<div id="userbox" class="userbox">
 						<a href="#" data-toggle="dropdown">
 							<figure class="profile-picture">
-								<img src="{% static 'img/!logged-user.jpg' %}" alt="Joseph Doe" class="rounded-circle" data-lock-picture="{% static 'img/!logged-user.jpg' %}" />
+								<img src="{{user.profile_image.url}}" alt="Joseph Doe" class="rounded-circle" />
 							</figure>
 							<div class="profile-info" data-lock-name="{{user.full_name}}" data-lock-email="{{user.email}}">
 								<span class="name">{{user.full_name}}</span>

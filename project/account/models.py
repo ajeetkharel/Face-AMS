@@ -50,6 +50,9 @@ class User(AbstractBaseUser):
         max_length=255,
         verbose_name="Full Name",
     )
+
+    profile_image = models.ImageField(upload_to="profile_images/", default="profile_images/default.jpg")
+
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)

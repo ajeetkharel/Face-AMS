@@ -71,8 +71,14 @@ def student_profile(request):
     student = Student.objects.get(user=request.user)
     context = {
         'title': 'Student Profile',
-        'student': student
+        'student': student,
     }
+    if request.method == "POST":
+        user = User.objects.get(id=request.user.pk)
+        profile_image = request.FILES["profile_image"]
+        user.profile_image = profile_image
+        user.save()
+
     return render(request, "student_dashboard/student_profile.html", context=context)
 
 

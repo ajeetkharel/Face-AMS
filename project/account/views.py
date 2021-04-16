@@ -49,11 +49,3 @@ def login_user_func(request, logtype='student'):
             else:
                 message = "Invalid Credentials. Try again!"
         return render(request, f'{logtype}_dashboard/login.html', context={'message':message, 'title': "Face AMS - Student Login"})
-
-def register_user(request):
-    if request.user.is_authenticated:
-        return redirect('dashboard')
-    else:
-        if request.method == "POST":
-            return render(request, 'admin_dashboard/register.html', context={'form':form, 'title': "Register an Account"})
-    return render(request, 'admin_dashboard/register.html', context={'title': "SabFood - Register"})

@@ -50,26 +50,9 @@ class AttendancePipeline:
         users = pd.read_sql(f"SELECT * FROM account_user WHERE id in ({students['user_id'].tolist()})".replace('[','').replace(']', ''), self.conn)
         users["user_id"] = users["id"]
 
-        self.merged = pd.merge(students, users, on='user_id')[["student_id", "face_encoding", "full_name"]]
+        self.merged = pd.merge(students, users, on='user_id')[["student_id", "face_encoding", "full_name", "profile_image"]]
         
         self.routines = pd.read_sql(f"SELECT * FROM school_routine WHERE _class_id = {_class}", self.conn)
-
-    
-    # def _init_db_(self):
-    #     self.conn = sqlite3.connect(self.db_dir)
-
-    #     students = pd.read_sql(f"SELECT * FROM school_student", self.conn)
-        
-    #     students["face_encoding"] = students["face_encoding"].apply(BaseUtils.decode)
-        
-    #     users = pd.read_sql(f"SELECT * FROM account_user WHERE id in ({students['user_id'].tolist()})".replace('[','').replace(']', ''), self.conn)
-    #     users["user_id"] = users["id"]
-
-    #     self.merged = pd.merge(students, users, on='user_id')[["student_id", "face_encoding", "full_name"]]
-        
-    #     self.routines = pd.read_sql(f"SELECT * FROM school_routine WHERE _class_id = {_class}", self.conn)
-
-    
 
 
     def run_pipeline(self):
@@ -81,6 +64,17 @@ class AttendancePipeline:
                 self.canvas.update_datetime()
                 (h, w) = frame.shape[:2]
                 frame =  cv2.flip(frame, 1)
+
+    
+                date = datetime.datetime.now()
+                current_time = date.time()
+                current_datetime = date.strftime('%Y-%m-%d %H:%M:%S')
+                routine, subject, start_time, end_time = self.check_routine(current_time, date.date())
+
+                if routine is not None:
+                    self.canvas.update_routine(subject, start_time, end_time)
+
+
                 blob = cv2.dnn.blobFromImage(frame, 1.0, (224, 224),
                     (104.0, 177.0, 123.0))
                 self.faceNet.setInput(blob)
@@ -105,28 +99,26 @@ class AttendancePipeline:
                         if face_encodings:
                             student_details = self.get_nearest_student(face_encodings)
 
-                            self.canvas.update_recognizedlist()
-
-                            date = datetime.datetime.now()
-                            current_time = date.time()
-                            current_datetime = date.strftime('%Y-%m-%d %H:%M:%S')
-                            routine, subject, start_time, end_time = self.check_routine(current_time, date.date())
                             if routine is not None:
-                                self.canvas.update_routine(subject, start_time, end_time)
                                 attendance = (routine, int(student_details["student_id"]), 'P', current_datetime)
                                 if not self.attendance_exists(attendance, start_time, end_time):
+
+                                    self.canvas.add_student(student_details, '')
+
                                     sql = ''' INSERT INTO school_attendance(routine_id, student_id, status, date)
                                                 VALUES(?,?,?,?) '''
                                     cur = self.conn.cursor()
                                     cur.execute(sql, attendance)
+                                    
                                     self.conn.commit()
+                                    
                             
                             cv2.rectangle(frame, (startX, startY),
                                         (endX, endY), (255, 255, 0), 2)
                             cv2.putText(frame, student_details["full_name"], (startX, startY-40), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36,255,12), 2)
                             cv2.putText(frame, str(student_details["student_id"]), (startX, startY-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36,255,12), 2)
 
-                            self.canvas.update_camframe(frame)
+                        self.canvas.update_camframe(frame)
                 cv2.imshow("Face AMS", self.canvas.frame)
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
