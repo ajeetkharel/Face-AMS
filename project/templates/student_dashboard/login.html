@@ -15,9 +15,7 @@
 <body style="background: url('{% static "img/login_bg2.jpg" %}');">
     <div class="container mt-5">
         <section id="formHolder">
-
             <div class="row">
-
                 <!-- Brand Box -->
                 <div class="col-sm-6 brand">
                     <div class="d-none d-md-block"><a href="#" class="logo"><img src="{% static 'img/logo.png' %}" width="120" height="30" alt="" srcset=""></a></div>
@@ -28,19 +26,23 @@
                         <small class="text-muted">A powerful, faster, easier and secure method of conducting attendance for almost every sectors.</small>
                     </div>
                 </div>
-
+                
 
                 <!-- Form Box -->
                 <div class="col-sm-6 form">
                     <!-- Login Form -->
                     <div class="login form-peice">
                         <div class="row d-flex justify-content-end" style="position: absolute;right: 5%;">
-                            Are you an admin? &nbsp <a href="{% url 'user-login' %}?type=admin" style="color: black; text-decoration: underline;">Login</a>
+                            Are you an admin? &nbsp <a href="{% url 'user-login' %}?type=Admin" style="color: black; text-decoration: underline;">Login</a>
                         </div>
                         <form class="login-form" id="login-form" action="#" method="post">
                             {% csrf_token %}
                             <h3 style="color: black; font-weight: bold;">Login to Face AMS</h3>
                             <small>Enter the details provided by your college</small>
+                            {% if message %}
+                                <br>
+                                <small class="text-danger mt-2">{{message}}</small>
+                            {% endif %}
                             <div class="form-group">
                                 <label for="loginemail">Email Adderss</label>
                                 <input type="email" name="email" id="loginemail" required autocomplete="dwad">

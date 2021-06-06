@@ -32,13 +32,13 @@
 		<link rel="stylesheet" href="{% static 'css/skins/default.css' %}" />
 
 		<!-- Theme Custom CSS -->
-		<link rel="stylesheet" href="{% static 'css/custom.css' %}">
+		<link rel="stylesheet" href="{% static 'css/admin_login.css' %}">
 
 		<!-- Head Libs -->
 		<script src="{% static 'vendor/modernizr/modernizr.js' %}"></script>
 
 	</head>
-	<body>
+	<body style="background: url('{% static "img/login_bg2.jpg" %}') !important;">
 		<!-- start: page -->
 		<section class="body-sign">
 			<div class="center-sign">
@@ -48,11 +48,15 @@
 
 				<div class="panel card-sign">
 					<div class="card-title-sign mt-3 text-right">
-						<h2 class="title text-uppercase font-weight-bold m-0"><i class="fas fa-user mr-1"></i> Sign In</h2>
+						<h2 class="title text-uppercase font-weight-bold m-0" style="background-color: #4e5052; font-family: Sans-serif;letter-spacing: 1px;  "><i class="fas fa-user mr-1"></i> Sign In</h2>
 					</div>
-					<div class="card-body">
-						<form action="" method="post">
+					<div class="card-body" style="border: 1px solid #a1a3a6;">
+						<form action=""  method="post">
 							{% csrf_token %}
+							{% if message %}
+                                <br>
+                                <div class="text-danger mb-2">{{message}}</div>
+                            {% endif %}
 							<div class="form-group mb-3">
 								<label>Email</label>
 								<div class="input-group">
@@ -88,7 +92,7 @@
 									</div>
 								</div>
 								<div class="col-sm-4 text-right">
-									<button type="submit" class="btn btn-primary mt-2">Sign In</button>
+									<button type="submit" class="btn btn-info mt-2" style="background-color: #03a9f4;">Sign In</button>
 								</div>
 							</div>
 							<br>

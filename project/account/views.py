@@ -11,17 +11,17 @@ def custom_redirect(url_name, *args, **kwargs):
     return HttpResponseRedirect(url + "?%s" % params)
 
 def login_user(request):
-    logtype = 'student'
+    logtype = 'Student'
     try:
         logtype = request.GET['type']
     except:
         pass
     return login_user_func(request, logtype)
 
-def login_user_func(request, logtype='student'):
+def login_user_func(request, logtype='Student'):
     user_map = {
-        False:'student',
-        True: 'admin'
+        False:'Student',
+        True: 'Admin'
     }
     if request.user.is_authenticated:
         return redirect('dashboard')
@@ -39,8 +39,8 @@ def login_user_func(request, logtype='student'):
                 request.session.set_expiry(0)
                 request.session.modified = True
             user = authenticate(request, email=email, password=password)
-            user_m = User.objects.get(pk=user.pk)
             if user is not None:
+                user_m = User.objects.get(pk=user.pk)
                 if user_map[user_m.is_admin] == logtype:
                     login(request, user)
                     return redirect('dashboard')
@@ -48,4 +48,4 @@ def login_user_func(request, logtype='student'):
                     return custom_redirect('user-login', type=user_map[user_m.is_admin])
             else:
                 message = "Invalid Credentials. Try again!"
-        return render(request, f'{logtype}_dashboard/login.html', context={'message':message, 'title': "Face AMS - Student Login"})
+        return render(request, f'{logtype}_dashboard/login.html', context={'message':message, 'title': f"Face AMS - {logtype} Login"})

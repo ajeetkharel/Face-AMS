@@ -48,7 +48,7 @@
                                                 <tr>
                                                     <td>{{attendance.date}} {{attendance.routine.time}}</td>
                                                     <td>
-                                                        {{attendance.subject}}
+                                                        {{attendance.routine.subject}}
 													</td>
 													{% if attendance.status == "P" %}
 														<td class="center"><i class="el el-ok-sign"> Present</i></td>
@@ -93,21 +93,23 @@
 		
 		<script type="text/javascript" src="{% static 'vendor/daterangepicker/moment.min.js' %}"></script>
 		<script type="text/javascript" src="{% static 'vendor/daterangepicker/daterangepicker.min.js' %}"></script>
+		<script type="text/javascript" src="{% static 'vendor/moment/moment.js' %}"></script>
 		<script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/datetime-moment.js"></script>
 		<script>
 			var startDate;
 			var endDate;
 			$('#daterange').daterangepicker();
 			var table = $('#attendances-table').DataTable({
-        "order": [[ 0, "asc" ]],
-        ordering:true,
-        searching: false,});
+				"order": [[ 0, "asc" ]],
+				ordering:true
+			});
+			
 			$.fn.dataTable.ext.search.push(
 				function( settings, data, dataIndex ) {
 					var min = parseDateValue(startDate);
 					var max = parseDateValue(endDate);
 							
-					var myDate = parseDateValue('{{ attendances.first.date|date:"m/d/Y" }}'); // use data for the age column
+					var myDate = parseDateValue(moment(data[0], 'LLL').format('MM/DD/YYYY')); // use data for the age column
 					console.log(min, max, myDate);
 					if (myDate <= max && myDate >= min) {
 						return true;

@@ -24,15 +24,6 @@
         <div class="col-auto">
             <button id="start_webcam" class="btn btn-success">Start Webcam</button>
         </div>
-        <div class="col-auto align-self-center">Or,</div>
-        <div class="col-auto">
-            <div class="input-group">
-                <input id="ip" type="text" class="form-control" placeholder="Enter IP Address" aria-label="IP Cam">
-                <div class="input-group-append">
-                  <button id="start_ipcam" class="btn btn-success" type="button">Start</button>
-                </div>
-            </div>
-        </div>
     </div>   
     <div class="row">
         <div class="col-auto">
@@ -201,10 +192,10 @@
             success: function(data) {
                 var image = 'data:image/jpeg;base64,'+data["image"];
                 $("#face_stream").attr("src", image);
+                $("#student_face").attr('value', data["image"]);
                 $("#reg-details").css({
                     display: 'block',
                 })
-                $("#student_face").attr('value', data["image"]);
             }
         });
     });

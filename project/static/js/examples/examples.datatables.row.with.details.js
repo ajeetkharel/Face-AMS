@@ -18,16 +18,12 @@ Theme Version: 	2.2.0
 			return [
 				'<table class="table mb-0">',
 					'<tr class="b-top-0">',
-						'<td><label class="mb-0">Rendering engine:</label></td>',
-						'<td>' + data[1]+ ' ' + data[4] + '</td>',
+						'<td><label class="mb-0">Subject: </label></td>',
+						'<td>' + data[3] + '</td>',
 					'</tr>',
 					'<tr>',
-						'<td><label class="mb-0">Link to source:</label></td>',
-						'<td>Could provide a link here</td>',
-					'</tr>',
-					'<tr>',
-						'<td><label class="mb-0">Extra info:</label></td>',
-						'<td>And any further details here (images etc)</td>',
+						'<td><label class="mb-0">Message: </label></td>',
+						'<td>' + data[4] + '</td>',
 					'</tr>',
 				'</table>'
 			].join('');
@@ -58,7 +54,8 @@ Theme Version: 	2.2.0
 			}],
 			aaSorting: [
 				[1, 'asc']
-			]
+			],
+			"searching": false,
 		});
 
 		// add a listener

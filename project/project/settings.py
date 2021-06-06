@@ -37,6 +37,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -77,7 +78,26 @@ TEMPLATES = [
         },
     },
 ]
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
+JET_DEFAULT_THEME = 'light-blue'
+JET_SIDE_MENU_COMPACT = True
+JET_CHANGE_FORM_SIBLING_LINKS = True
+JET_SIDE_MENU_ITEMS = [  # A list of application or custom item dicts
+    {'label': ('Admin Controls'), 'app_label': 'core', 'items': [
+        {'name': 'school.class'},
+        {'name': 'school.subject'},
+        {'name': 'school.routine'},
+    ]},
+    {'label': ('User Models'), 'app_label': 'core', 'items': [
+        {'name': 'school.student'},
+        {'name': 'account.user'},
+    ]},
+    {'label': ('Other Important Models'), 'app_label': 'core', 'items': [
+        {'name': 'school.attendance'},
+        {'name': 'school.feedback'},
+    ]},
+]
 WSGI_APPLICATION = 'project.wsgi.application'
 
 
@@ -123,7 +143,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 AUTH_USER_MODEL = 'account.User'

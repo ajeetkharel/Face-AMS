@@ -19,6 +19,10 @@ import io
 import pickle
 import re
 import face_recognition
+from datetime import datetime, timedelta
+from collections import OrderedDict
+
+
 module_dir = os.path.dirname(__file__)
 
 
@@ -27,12 +31,7 @@ from chartjs.views.lines import BaseLineChartView
 
 def dashboard(request):
     if request.user.is_staff:
-        students = Student.objects.all()
-        classes = Class.objects.all()
-        subjects = Subject.objects.all()
-        routines = Routine.objects.all()
-        attendances = Attendance.objects.all()
-
+        classes = Class.objects.all().order_by('-name')
         context = {
             'title': "Admin Dashboard",
             'classes': classes,
@@ -41,6 +40,7 @@ def dashboard(request):
 
     else:
         return redirect('student-dashboard')
+
 
 def student_dashboard(request):
     if request.user.is_authenticated:
@@ -54,7 +54,7 @@ def student_dashboard(request):
         return redirect('user-login')
 
 def register_students(request):
-    classes = Class.objects.all()
+    classes = Class.objects.all().order_by('-name')
     context = {
         'title': "Register Students",
         'classes': classes,
@@ -77,7 +77,8 @@ def register_students(request):
             user.set_password(password)
             user.save()
 
-            student = Student.objects.create(student_id=int(request.POST["student_id"]), user=user, contact=request.POST["contact"], address=request.POST["address"], study_class=Class.objects.get(pk=int(request.POST["class"])))
+            student = Student.objects.create(student_id=int(request.POST["student_id"]), user=user, contact=request.POST["contact"],
+             address=request.POST["address"], study_class=Class.objects.get(pk=int(request.POST["class"])))
             image_data = base64.b64decode(profile_image.replace("data:image/jpeg;base64,", ""))
             image = Image.open(io.BytesIO(image_data))
 
@@ -88,6 +89,7 @@ def register_students(request):
             # img_content = ContentFile(img_io.getvalue(), f'{request.POST["student_id"]}_face.jpg')
 
             encoding = face_recognition.face_encodings(np.array(image))
+            print(encoding)
             np_bytes = pickle.dumps(encoding)
             np_base64 = base64.b64encode(np_bytes)
             student.face_encoding = np_base64
@@ -116,8 +118,7 @@ def gen(camera, face=False):
         ret, frame = camera.read()
         frame = cv2.flip(frame, 1)
         ret, jpeg = cv2.imencode('.jpg', frame)
-        yield(b'--frame\r\n'
-        b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
+        yield(b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
 
 @gzip.gzip_page
 def attached_cam(request): 
@@ -137,37 +138,40 @@ def attached_cam(request):
         (h, w) = image.shape[:2]
         blob = cv2.dnn.blobFromImage(image, 1.0, (224, 224),
             (104.0, 177.0, 123.0))
-
         faceNet.setInput(blob)
         detections = faceNet.forward()
-
         for i in range(0, detections.shape[2]):
             confidence = detections[0, 0, i, 2]
-
             if confidence > 0.5:
                 box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
                 (startX, startY, endX, endY) = box.astype("int")
-
                 (startX, startY) = (max(0, startX), max(0, startY))
                 (endX, endY) = (min(w - 1, endX), min(h - 1, endY))
-                
                 image = image[startY:endY, startX:endX]
-
         ret, jpeg = cv2.imencode('.jpg', image)
-        return HttpResponse(json.dumps({"image": base64.b64encode(jpeg).decode()}), content_type='application/json')
+        encoded = base64.b64encode(jpeg)
+        decoded = encoded.decode()
+
+        jsondata = json.dumps({"image": decoded})
+        return HttpResponse(jsondata, content_type='application/json')
  
     models_dir = os.path.join(module_dir, "models")
-    return StreamingHttpResponse(gen(cv2.VideoCapture(0)),content_type="multipart/x-mixed-replace;boundary=frame")
+    return StreamingHttpResponse(gen(cv2.VideoCapture(0))
+                    ,content_type="multipart/x-mixed-replace;boundary=frame")
 
 def ip_cam(request, ip):
     pass
 
 
-
 class LineChartJSONView(BaseLineChartView):
+    current_date = datetime.now()
+
+    dates = [f"{current_date.year}-01-01", f"{current_date.date().strftime('%Y-%m-%d')}"]
+    start, end = [datetime.strptime(_, "%Y-%m-%d") for _ in dates]
+
     def get_labels(self):
-        """Return 7 labels for the x-axis."""
-        return ["January", "February", "March", "April", "May", "June", "July"]
+        listt = OrderedDict(((self.start + timedelta(_)).strftime(r"%B"), None) for _ in range((self.end - self.start).days)).keys()
+        return list(listt)
 
     def get_providers(self):
         """Return names of datasets."""
@@ -175,6 +179,12 @@ class LineChartJSONView(BaseLineChartView):
 
     def get_data(self):
         """Return 3 datasets to plot."""
+        months = OrderedDict(((self.start + timedelta(_)).strftime(r"%m"), None) for _ in range((self.end - self.start).days)).keys()
 
-        return [[75, 44, 92, 11, 44, 95, 35],
-                [41, 92, 18, 3, 73, 87, 92]]
+        data = [[], []]
+        for month in months:
+            attendances = Attendance.objects.filter(date__year=self.current_date.year, date__month=month)
+
+            data[0].append(len(attendances.filter(status="P")))
+            data[1].append(len(attendances.filter(status="A")))
+        return data

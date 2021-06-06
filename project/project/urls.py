@@ -24,6 +24,7 @@ from django.views.generic.base import RedirectView
 from account import views as accountviews
 
 urlpatterns = [
+    path('jet/', include('jet.urls')),  # Django JET URLS
     path('admin/', admin.site.urls),
     path('', include('base.urls')),
     path('', include('school.urls')),
@@ -35,7 +36,7 @@ urlpatterns = [
         "favicon.ico",
         RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),
     ),
-]
+    ]
 admin.site.enable_nav_sidebar = True
 
 

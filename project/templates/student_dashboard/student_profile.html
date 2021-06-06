@@ -6,106 +6,201 @@
 
 {% endblock head %}
 
-			<div class="inner-wrapper">
-				{% block content %}
-					<header class="page-header">
-						<h2>Student Profile</h2>
-					</header>
+<div class="inner-wrapper">
+	{% block content %}
+	<header class="page-header">
+		<h2>Student Profile</h2>
+	</header>
 
-					<!-- start: page -->
+	<!-- start: page -->
 
-					<div class="row">
-						<div class="col-lg-4 col-xl-3 mb-4 mb-xl-0">
-
-							<section class="card">
-								<div class="card-body">
-									<div class="thumb-info mb-3">
-										<img src="{{student.user.profile_image.url}}" class="rounded img-fluid" alt="John Doe">
-										<div class="thumb-info-title">
-											<span class="thumb-info-inner">{{user.full_name}}</span>
-											<span class="thumb-info-type">Student</span>
-										</div>
-									</div>
-									<span class="thumb-info">
-										<form action="" method="post" enctype="multipart/form-data">
-											{% csrf_token %}
-											<div class="input-group" style="height: 33.5px !important;">
-												<div class="input-group-prepend" style="height: 33.5px !important;">
-												  <span class="input-group-text">Change picture</span>
-												</div>
-												<div class="custom-file">
-												  <input type="file" class="custom-file-input" id="inputGroupFile01"
-													aria-describedby="inputGroupFileAddon01" name="profile_image">
-												  <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-												</div>
-											</div><br>
-											<input type="submit" value="Update" class="btn btn-primary">
-										</form>
-									</span>
-								</div>
-							</section>
+	<div class="row">
+		<div class="col-lg-4  mb-4 mb-xl-0">
+			<section class="card">
+				<div class="card-body">
+					<div class="thumb-info mb-3">
+						<img src="{{student.user.profile_image.url}}" class="rounded img-fluid" alt="John Doe">
+						<div class="thumb-info-title">
+							<span class="thumb-info-inner">{{user.full_name}}</span>
+							<span class="thumb-info-type">Student</span>
 						</div>
-						<div class="col-lg-8 col-xl-6">
+					</div>
+					<span class="thumb-info">
+						<form action="" method="post" enctype="multipart/form-data">
+							{% csrf_token %}
+							<div class="input-group" style="height: 33.5px !important;">
+								<div class="input-group-prepend" style="height: 33.5px !important;">
+									<span class="input-group-text">Change picture</span>
+								</div>
+								<div class="custom-file">
+									<input type="file" class="custom-file-input" id="inputGroupFile01"
+										aria-describedby="inputGroupFileAddon01" name="profile_image">
+									<label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+								</div>
+							</div><br>
+							<div class="row d-flex justify-content-between">
+								<div class="col-lg-4">
+									<input type="submit" value="Update Profile" class="btn btn-primary">
+								</div>
+							</div>
+						</form>
+						<div class="row mt-2">
+							<div class="col">
+								<a data-id="{{student.pk}}" href="#" class="btn btn-primary w-100"
+									data-action="send_feedback" data-toggle="modal" data-target="#sendFeedbackModal"
+									style="background-color: blueviolet;">
+									Send Feedback
+								</a>
+								<div>
+								</div>
+					</span>
+				</div>
+			</section>
+		</div>
+		<div id="modal-div"></div>
+		<div class="col-lg-8">
 
-							<div class="tabs">
-								<ul class="nav nav-tabs tabs-primary">
-									<li class="nav-item active">
-										<a class="nav-link" href="#overview" data-toggle="tab">Overview</a>
-									</li>
-								</ul>
-								<div class="tab-content">
-									<div id="overview" class="tab-pane active">
+			<div class="tabs">
+				<ul class="nav nav-tabs tabs-primary">
+					<li class="nav-item active">
+						<a class="nav-link" href="#overview" data-toggle="tab">Overview</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#edit" data-toggle="tab">Edit</a>
+					</li>
+				</ul>
+				<div class="tab-content">
+					<div id="overview" class="tab-pane active">
 
-										<div class="p-3">
-											<h4 class="mb-3">Basic Info</h4>
-											
-											<div class="form-group row">
-												<label for="staticID" class="col-sm-2 col-form-label">ID:</label>
-												<div class="col-sm-10">
-												<input type="text" readonly class="form-control-plaintext" id="staticID" value="{{student.student_id}}">
-												</div>
-											</div>
-											<div class="form-group row">
-												<label for="staticClass" class="col-sm-2 col-form-label">Class:</label>
-												<div class="col-sm-10">
-												<input type="text" readonly class="form-control-plaintext" id="staticClass" value="{{student.study_class}}">
-												</div>
-											</div>
-											<div class="form-group row">
-												<label for="staticEmail" class="col-sm-2 col-form-label">Email:</label>
-												<div class="col-sm-10">
-												<input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{student.user.email}}">
-												</div>
-											</div>
-											<div class="form-group row">
-												<label for="staticContact" class="col-sm-2 col-form-label">Contact:</label>
-												<div class="col-sm-10">
-												<input type="text" readonly class="form-control-plaintext" id="staticContact" value="{{student.contact}}">
-												</div>
-											</div>
-											<div class="form-group row">
-												<label for="staticAddress" class="col-sm-2 col-form-label">Address:</label>
-												<div class="col-sm-10">
-												<input type="text" readonly class="form-control-plaintext" id="staticAddress" value="{{student.address}}">
-												</div>
-											</div>
-										</div>
-									</div>
+						<div class="p-3">
+							<h4 class="mb-3">Basic Info</h4>
+
+							<div class="form-group row">
+								<label for="staticID" class="col-sm-2 col-form-label">ID:</label>
+								<div class="col-sm-10">
+									<input type="text" readonly class="form-control-plaintext" id="staticID"
+										value="{{student.student_id}}">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="staticClass" class="col-sm-2 col-form-label">Class:</label>
+								<div class="col-sm-10">
+									<input type="text" readonly class="form-control-plaintext" id="staticClass"
+										value="{{student.study_class}}">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="staticEmail" class="col-sm-2 col-form-label">Email:</label>
+								<div class="col-sm-10">
+									<input type="text" readonly class="form-control-plaintext" id="staticEmail"
+										value="{{student.user.email}}">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="staticContact" class="col-sm-2 col-form-label">Contact:</label>
+								<div class="col-sm-10">
+									<input type="text" readonly class="form-control-plaintext" id="staticContact"
+										value="{{student.contact}}">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="staticAddress" class="col-sm-2 col-form-label">Address:</label>
+								<div class="col-sm-10">
+									<input type="text" readonly class="form-control-plaintext" id="staticAddress"
+										value="{{student.address}}">
 								</div>
 							</div>
 						</div>
 					</div>
-				{% endblock content %}
+
+					<div id="edit" class="tab-pane">
+
+						<form method="POST" id="change_password_form" action="{% url 'change-password' %}">
+							{% csrf_token %}
+							<h4 class="mb-3">Change Password</h4>
+							<label class="text-danger" for="" id="errorMessage"></label>
+							<div class="form-row">
+								<div class="form-group col-md-12">
+									<label for="inputPassword42">Old Password</label>
+									<input name="old_password" type="password" class="form-control" id="inputPassword42"
+										placeholder="Password">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="inputPassword14">New Password</label>
+									<input name="new_password1" type="password" class="form-control" id="inputPassword14"
+										placeholder="Password">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="inputPassword14">Re New Password</label>
+									<input name="new_password2" type="password" class="form-control" id="inputPassword14"
+										placeholder="Password">
+								</div>
+							</div>
+
+							<div class="form-row">
+								<div class="col-md-12 text-right mt-3">
+									<button class="btn btn-primary modal-confirm">Update</button>
+								</div>
+							</div>
+
+						</form>
+
+					</div>
+				</div>
 			</div>
-		{% block script %}
-		<!-- Specific Page Vendor -->
-		<script src="{% static 'vendor/autosize/autosize.js' %}"></script>
-		<script>
-			$('input[type="file"]').change(function(e){
-				var fileName = e.target.files[0].name;
-				$('.custom-file-label').html(fileName);
-			});
-		</script>
-		{% endblock script %}
-	</body>
-</html>
+		</div>
+	</div>
+	{% endblock content %}
+</div>
+{% block script %}
+<!-- Specific Page Vendor -->
+<script src="{% static 'vendor/autosize/autosize.js' %}"></script>
+<script>
+	$('input[type="file"]').change(function (e) {
+		var fileName = e.target.files[0].name;
+		$('.custom-file-label').html(fileName);
+	});
+
+	var modalDiv = $("#modal-div");
+
+	$('[data-action=send_feedback]').on("click", function () {
+		var id = $(this).data('id');
+		$.ajax({
+			url: "/send-feedback/" + id,
+			success: function (data) {
+				modalDiv.html(data);
+				$("#sendFeedbackModal").appendTo("body").modal('show');
+			},
+			error: function () {
+				console.log('error')
+			},
+		});
+	});
+</script>
+<script>
+	$(document).on('submit', '#change_password_form', function (e) {
+		e.preventDefault();
+		var frm = $('#change_password_form')
+		$.ajax({
+			type: frm.attr('method'),
+			url: frm.attr('action'),
+			data: frm.serialize(),
+			success: function (response) {
+				console.log(response);
+				$("#errorMessage").text(response);
+				if (response == "Updated Successfully")
+				{
+					$("#change_password_form").trigger('reset');
+					$("#errorMessage").removeClass("text-danger");
+					$("#errorMessage").addClass("text-success");
+				}
+				else{
+					$("#errorMessage").addClass("text-danger");
+					$("#errorMessage").removeClass("text-success");
+				}
+			}
+		})
+		return false;
+	});
+</script>
+{% endblock script %}

@@ -1,4 +1,16 @@
 {% extends "admin_dashboard/base.html" %}
+{% load static %}
+{% block head %}
+
+
+		<!-- Specific Page Vendor CSS -->
+		<link rel="stylesheet" href="{% static 'vendor/select2/css/select2.css' %}" />
+		<link rel="stylesheet" href="{% static 'vendor/select2-bootstrap-theme/select2-bootstrap.min.css' %}" />
+		<link rel="stylesheet" href="{% static 'vendor/datatables/media/css/dataTables.bootstrap4.css' %}" />
+
+
+{% endblock %}
+
 {% block content %}
 
 <section role="main" class="content-body">
@@ -17,10 +29,56 @@
             </ol>
         </div>
     </header>
+    
     <div class="row">
-        {% for feedback in feedbacks %}
-            {{feedback.name}}
-        {% endfor %}
+        <div class="col">
+            <section class="card">
+                <header class="card-header">
+                    <h2 class="card-title">Student Feedbacks</h2>
+                </header>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped mb-0" id="datatable-details">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Student Name</th>
+                                <th>Subject</th>
+                                <th style="display: none;">Message</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for feedback in feedbacks %}
+                            <tr>
+                                <td>{{feedback.student.student_id}}</td>
+                                <td>{{feedback.student.user.full_name}}</td>
+                                <td>{{feedback.subject}}</td>
+                                <td style="display: none;">{{feedback.message}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
     </div>
 </section>
 {% endblock content %}
+{% block scripts %}
+        <!-- Specific Page Vendor -->
+        <script src="{% static 'vendor/select2/js/select2.js' %}"></script>
+        <script src="{% static 'vendor/datatables/media/js/jquery.dataTables.min.js' %}"></script>
+        <script src="{% static 'vendor/datatables/media/js/dataTables.bootstrap4.min.js' %}"></script>
+        <script src="{% static 'vendor/datatables/extras/TableTools/Buttons-1.4.2/js/dataTables.buttons.min.js' %}"></script>
+        <script src="{% static 'vendor/datatables/extras/TableTools/Buttons-1.4.2/js/buttons.bootstrap4.min.js' %}"></script>
+        <script src="{% static 'vendor/datatables/extras/TableTools/Buttons-1.4.2/js/buttons.html5.min.js' %}"></script>
+        <script src="{% static 'vendor/datatables/extras/TableTools/Buttons-1.4.2/js/buttons.print.min.js' %}"></script>
+        <script src="{% static 'vendor/datatables/extras/TableTools/JSZip-2.5.0/jszip.min.js' %}"></script>
+        <script src="{% static 'vendor/datatables/extras/TableTools/pdfmake-0.1.32/pdfmake.min.js' %}"></script>
+        <script src="{% static 'vendor/datatables/extras/TableTools/pdfmake-0.1.32/vfs_fonts.js' %}"></script>
+        <!-- Examples -->
+
+        <script src="{% static 'js/examples/examples.datatables.default.js' %}"></script>
+        <script src="{% static 'js/examples/examples.datatables.row.with.details.js' %}"></script>
+        <script src="{% static 'js/examples/examples.datatables.tabletools.js' %}"></script>
+        
+{% endblock %}

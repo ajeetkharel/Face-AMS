@@ -1,4 +1,5 @@
 {% extends 'admin_dashboard/base.html' %}
+{% load admin_tags %}
 {% load static %}
 		{% block head %}
 		<!-- Specific Page Vendor CSS -->
@@ -25,54 +26,16 @@
 							</ol>
 						</div>
 					</header>
+					<h4>The overall attendance data for current year is shown in charts below:</h3>
 					<div class="row">
 						<div class="col-lg-6">
 							<section class="card">
 								<header class="card-header">
 									<h2 class="card-title">Line Chart</h2>
-									<p class="card-subtitle">A style of chart that is created by connecting a series of data points together with a line.</p>
+									<p class="card-subtitle">Line chart for overall attendance of current year</p>
 								</header>
 								<div class="card-body">
-					
-									<!-- Morris: Line -->
-									<!-- <div class="chart chart-md" id="morrisLine"></div>
-									<script type="text/javascript">
-					
-										var morrisLineData = [{
-											y: '2006',
-											a: 100
-										}, {
-											y: '2007',
-											a: 75
-										}, {
-											y: '2008',
-											
-											a: 50
-										}, {
-											y: '2009',
-											a: 75
-										}, {
-											y: '2010',
-											a: 50
-										}, {
-											y: '2011',
-											a: 75
-										}, {
-											y: '2012',
-											a: 100
-										}, {
-											y: '2017',
-											a: 75
-										}, {
-											y: '2017',
-											a: 100
-										}];
-					
-										// See: js/examples/examples.charts.js for more settings.
-					
-									</script> -->
 									<canvas id="myChart" width="500" height="400"></canvas>
-
 									<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
 									<script type="text/javascript" src="{% static 'js/Chart.min.js' %}"></script>
 									<script type="text/javascript">
@@ -90,44 +53,28 @@
 							<section class="card">
 								<header class="card-header">
 									<h2 class="card-title">Pie Chart</h2>
-									<p class="card-subtitle">Default Pie Chart</p>
+									<p class="card-subtitle">Pie chart for overall attendance of current year</p>
 								</header>
 								<div class="card-body">
-					
-									<!-- Flot: Pie -->
 									<div class="chart chart-md" id="flotPie"></div>
 									<script type="text/javascript">
-					
+										var present = parseInt('{{1|get_present}}');
+            							var absent = parseInt('{{1|get_absent}}');
+
 										var flotPieData = [{
-											label: "Series 1",
+											label: "Present",
 											data: [
-												[1, 60]
+												[1, present]
 											],
 											color: '#0088cc'
 										}, {
-											label: "Series 2",
+											label: "Absent",
 											data: [
-												[1, 10]
-											],
-											color: '#2baab1'
-										}, {
-											label: "Series 3",
-											data: [
-												[1, 15]
-											],
-											color: '#734ba9'
-										}, {
-											label: "Series 4",
-											data: [
-												[1, 15]
+												[1, absent]
 											],
 											color: '#E36159'
 										}];
-					
-										// See: js/examples/examples.charts.js for more settings.
-					
 									</script>
-					
 								</div>
 							</section>
 						</div>

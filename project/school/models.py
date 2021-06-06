@@ -36,13 +36,18 @@ class Routine(models.Model):
 
 
 class Attendance(models.Model):
-    STATUS_CHOICES = (
-        ("P", "Present"),
-        ("A", "Absent")
-    )
     date = models.DateTimeField()
     student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True)
     routine = models.ForeignKey(Routine, on_delete=models.CASCADE, null=True)
-    status = models.CharField(max_length=7, default="P", choices=STATUS_CHOICES)
+    status = models.CharField(max_length=1, default="P")
     def __str__(self):
         return f"{self.date}-{self.student.student_id}"
+
+
+class Feedback(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True)
+    subject = models.CharField(max_length=255, default='')
+    message = models.TextField()
+
+    def __str__(self):
+        return f"Feedback from {self.student.user.full_name} - {self.subject}"
